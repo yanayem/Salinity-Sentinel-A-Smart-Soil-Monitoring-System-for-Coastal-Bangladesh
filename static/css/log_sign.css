@@ -1,0 +1,128 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #1B3C53, #4E8098);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e90a0a;
+}
+header {
+  text-align: center;
+  margin-top: 100px;
+  color: #1B3C53;
+}
+
+/* Container */
+.auth-container {
+  perspective: 1000px;
+}
+
+/* Card 3D Wrapper */
+.card-3d-wrapper {
+  width: 360px;
+  height: 440px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+.card-3d-wrapper.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Card Styles */
+.card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.front {
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* Text & Input Styles */
+h1 {
+  color: #1B3C53;
+  margin-bottom: 20px;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #1B3C53;
+}
+
+.checkbox {
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.btn {
+  background-color: #1B3C53;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #163344;
+}
+
+p {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+a {
+  color: #0077b6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card-3d-wrapper {
+    width: 90%;
+    height: auto;
+    min-height: 420px;
+  }
+}
