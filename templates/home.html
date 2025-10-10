@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOME</title>
+  <link rel="stylesheet" href="/static/css/home.css" />
+</head>
+<body>
+  {% include "nav.html" %}
+
+  <section class="home-section">
+   <div class="overlay"></div>
+    <div class="container">
+      <div class="content animate">
+        <h1>Salinity Sentinel – A Smart Soil Monitoring System for Coastal Bangladesh</h1>
+        <p>
+          The coastal regions of Bangladesh are severely affected by soil salinity, which directly hampers agricultural productivity and the livelihoods of farmers. Due to climate change, rising sea levels, and saline water intrusion, this problem is worsening. Most farmers are unaware of these changes in real time, which leads to crop damage and financial losses. Salinity Sentinel is a smart, low-cost soil monitoring system that uses sensors and Python-based software to monitor soil conditions. It can measure salinity, moisture, temperature, and pH levels in real time and send alerts when necessary, helping users take preventive measures to protect crops.
+        </p>
+      </div>
+    </div> 
+  </section>
+
+  <script>
+    // Fade-in animation when scrolled into view
+    const animatedElements = document.querySelectorAll('.animate');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    animatedElements.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

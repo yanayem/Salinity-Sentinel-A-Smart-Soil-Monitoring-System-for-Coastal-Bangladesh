@@ -117,12 +117,142 @@ a {
 a:hover {
   text-decoration: underline;
 }
+/* ---------------- Added Styles ---------------- */
 
-/* Responsive */
+/* Django messages */
+.messages {
+  width: 360px;
+  max-width: 90%;
+  margin: 0 auto 20px auto;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.messages p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Success messages */
+.messages .success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Error messages */
+.messages .error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Info / warning messages */
+.messages .info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* Adjust input fields inside messages container for mobile */
+@media (max-width: 480px) {
+  .messages {
+    width: 90%;
+    padding: 10px 15px;
+  }
+}
+
+/* Optional: subtle animation for flipped card */
+.card-3d-wrapper {
+  transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+/* Optional: smooth focus effect for inputs */
+input:focus {
+  box-shadow: 0 0 5px rgba(27, 60, 83, 0.5);
+}
+
+
+/* ---------------- Responsive Enhancements ---------------- */
+
+/* Make container flexible */
+.auth-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Card wrapper adjustments */
+.card-3d-wrapper {
+  width: 360px;
+  max-width: 100%;
+  height: 440px;
+  min-height: 420px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Responsive adjustments for smaller devices */
+@media (max-width: 768px) {
+  .card-3d-wrapper {
+    width: 320px;
+    height: 480px;
+  }
+
+  input, .btn {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .messages {
+    width: 90%;
+    padding: 10px 12px;
+  }
+}
+
 @media (max-width: 480px) {
   .card-3d-wrapper {
     width: 90%;
     height: auto;
-    min-height: 420px;
+    min-height: 450px;
   }
+
+  form {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  input {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .messages {
+    width: 95%;
+    font-size: 13px;
+  }
+}
+
+/* Make messages stack nicely on small screens */
+.messages p {
+  word-wrap: break-word;
 }

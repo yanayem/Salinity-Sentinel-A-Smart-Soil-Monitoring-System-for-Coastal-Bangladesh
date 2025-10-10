@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soil Monitoring Dashboard</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      Soil Monitor
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active">Dashboard</a></li>
+      <li><a href="{% url 'soil_types' %}">Soil Types</a></li>
+      <li><a href="#">pH Levels</a></li>
+      <li><a href="#">Temperature</a></li>
+      <li><a href="#">Humidity</a></li>
+      <li><a href="#">Profile</a></li>
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-bar">
+      <h1>Welcome, {{ user.first_name|default:user.username }}!</h1>
+      <form method="GET" action="{% url 'soil_types' %}" class="search-bar">
+        <input type="text" name="q" placeholder="Search soil types..." value="{{ query|default:'' }}">
+        <button type="submit">Search</button>
+      </form>
+    </header>
+
+    <!-- Soil Monitoring Cards -->
+    <section class="cards">
+      <div class="card">
+        <h3>Soil Type</h3>
+        <p>{{ soil_type.name|default:"No data" }}</p>
+      </div>
+      <div class="card">
+        <h3>pH Level</h3>
+        <p>{{ soil_data.ph_level|default:"No data" }}</p>
+      </div>
+      <div class="card">
+        <h3>Temperature</h3>
+        <p>{{ soil_data.temperature|default:"No data" }} °C</p>
+      </div>
+      <div class="card">
+        <h3>Humidity</h3>
+        <p>{{ soil_data.humidity|default:"No data" }}%</p>
+      </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+      <h2>Your Profile</h2>
+      <ul>
+        <li><strong>Email:</strong> {{ user.email|default:"No email" }}</li>
+        <li><strong>Phone:</strong> {{ profile.phone_number|default:"No phone" }}</li>
+        <li><strong>Location:</strong> {{ profile.location|default:"No location" }}</li>
+      </ul>
+    </section>
+
+    <!-- Graphs Section -->
+    <section class="charts">
+      <h2>Soil Monitoring Graphs (Last 7 Readings)</h2>
+
+      <div class="chart-container">
+        <canvas id="phChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="temperatureChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="humidityChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chart.js Scripts -->
+  <script>
+    const phChart = new Chart(document.getElementById('phChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: {{ timestamps|safe }},
+        datasets: [{
+          label: 'pH Level',
+          data: {{ ph_values|safe }},
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    const tempChart = new Chart(document.getElementById('temperatureChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: {{ timestamps|safe }},
+        datasets: [{
+          label: 'Temperature (°C)',
+          data: {{ temp_values|safe }},
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    const humidityChart = new Chart(document.getElementById('humidityChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: {{ timestamps|safe }},
+        datasets: [{
+          label: 'Humidity (%)',
+          data: {{ humidity_values|safe }},
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true }
+    });
+  </script>
+</body>
+</html>

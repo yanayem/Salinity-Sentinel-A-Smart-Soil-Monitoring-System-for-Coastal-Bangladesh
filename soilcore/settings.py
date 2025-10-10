@@ -55,7 +55,7 @@ ROOT_URLCONF = 'soilcore.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, 'template'],
+        'DIRS': [BASE_DIR, 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,11 +74,16 @@ WSGI_APPLICATION = 'soilcore.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {  # All data goes to MySQL
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'soil_db',
+        'USER': 'root',
+        'PASSWORD': '',   # your MySQL password
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation

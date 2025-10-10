@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WeatherApp</title>
+    <link rel="stylesheet" href="/static/css/temp.css" />
+  </head>
+  <body>
+    <nav>WeaTherApp</nav>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <h4>Please Allow Browser Location Access</h4>
+        </div>
+      </div>
+
+      <div class="card">
+        <h5 class="card-header">Temperature</h5>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+              <input
+                name="latitude"
+                id="latitude"
+                required
+                type="text"
+                placeholder="Enter Latitude"
+              />
+              <input
+                name="longitude"
+                id="longitude"
+                required
+                type="text"
+                placeholder="Enter Longitude"
+              />
+            </div>
+            <button type="submit">Show Temperature</button>
+          </form>
+        </div>
+      </div>
+
+      {% if temp %}
+      <div class="card">
+        <div class="card-body">
+          Currently <strong>{{ temp }}&deg; Celsius</strong>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <script>
+      const latitude = document.getElementById("latitude");
+      const longitude = document.getElementById("longitude");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            latitude.value = position.coords.latitude;
+            longitude.value = position.coords.longitude;
+          });
+        } else {
+          alert("Geolocation is not supported by your browser");
+        }
+      }
+
+      getLocation();
+    </script>
+  </body>
+</html>

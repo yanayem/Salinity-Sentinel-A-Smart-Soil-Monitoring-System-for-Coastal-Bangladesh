@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Responsive Navbar</title>
+<link rel="stylesheet" href="/static/css/nav.css" />
+</head>
+<body>
+<nav class="top_nav_bar">
+  <div class="container">
+    <!-- Logo -->
+    <div class="logo_section">
+    
+      <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="logo" class="logo"/>
+      <span class="logo_text">Logo</span>
+    </div>
+
+    <!-- Hamburger + mobile search icon -->
+    <div class="mobile_controls">
+      <div class="menu_toggle" id="menuToggle">&#9776;</div>
+      <div class="mobile_search_icon" id="fbSearch">
+        <input type="text" placeholder="Search..." id="fbSearchInput" />
+        <span class="search_icon">&#128269;</span>
+      </div>
+    </div>
+
+    <!-- Navbar links + login/signup -->
+    <div class="navbar" id="navbar">
+      <ul class="nav">
+    <li class="nav-item"><a href="{% url 'homepage' %}">Home</a></li>
+    <li class="nav-item"><a href="{% url 'soil_types' %}">Soil Type</a></li>
+    <li class="nav-item"><a href="#">Temperature</a></li>
+    <li class="nav-item"><a href="{% url 'aboutpage' %}">About Us</a></li>
+</ul>
+
+      <div class="mobile_login_btn">
+        <a href="{% url 'login_signup' %}" class="btn primary">Login</a>
+        <a href="{% url 'login_signup' %}?mode=signup" class="btn secondary">Sign Up</a>
+      </div>
+    </div>
+
+    <!-- Desktop search + login/signup -->
+    <div class="search_btns_desktop">
+      <div class="search_bar">
+        <input type="text" placeholder="Search here..." />
+      </div>
+      <div class="login_btn">
+        <a href="{% url 'login_signup' %}?mode=login" class="btn primary">Login</a>
+<a href="{% url 'login_signup' %}?mode=signup" class="btn secondary">Sign Up</a>
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+const menuToggle = document.getElementById("menuToggle");
+const navbar = document.getElementById("navbar");
+const fbSearch = document.getElementById("fbSearch");
+const fbSearchInput = document.getElementById("fbSearchInput");
+const topNav = document.querySelector(".top_nav_bar");
+
+// Hamburger toggle
+menuToggle.addEventListener("click", () => {
+  navbar.classList.toggle("active");
+});
+
+// Mobile search toggle
+fbSearch.addEventListener("click", () => {
+  fbSearch.classList.toggle("active");
+  fbSearchInput.focus();
+});
+
+// Collapse search if click outside
+document.addEventListener("click", (e) => {
+  if (!fbSearch.contains(e.target)) {
+    fbSearch.classList.remove("active");
+  }
+});
+
+// Sticky shadow
+window.addEventListener("scroll", () => {
+  topNav.classList.toggle("scrolled", window.scrollY > 10);
+});
+</script>
+</body>
+</html>
