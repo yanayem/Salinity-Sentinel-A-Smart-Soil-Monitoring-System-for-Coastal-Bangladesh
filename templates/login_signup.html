@@ -1,104 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login & Signup</title>
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/log_sign.css' %}" />
-</head>
-<body>
-  {% include "nav.html" %}
 
-  <section class="auth-container">
-    <!-- Display Django messages -->
-    {% if messages %}
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    {% include "nav.html" %}
+
+    <section class="auth-container">
+      {% if messages %}
       <div class="messages">
         {% for message in messages %}
-          <p class="{{ message.tags }}">{{ message }}</p>
+        <p class="{{ message.tags }}">{{ message }}</p>
         {% endfor %}
       </div>
-    {% endif %}
+      {% endif %}
 
-    <div class="card-3d-wrapper" id="card-wrapper">
+      <div class="card-3d-wrapper" id="card-wrapper">
+        <!-- LOGIN CARD -->
+        <div class="card front" id="loginCard">
+          <h1>Welcome Back</h1>
+          <form id="loginForm" method="post" action="{% url 'login_signup' %}">
+            {% csrf_token %}
+            <div class="input-group">
+              <i class="fa fa-envelope"></i>
+              <input
+                type="email"
+                name="username"
+                id="loginEmail"
+                placeholder="Email Address"
+                required
+              />
+            </div>
 
-      <!-- LOGIN CARD -->
-      <div class="card front" id="loginCard">
-        <h1>Log In</h1>
-        <form method="post" action="{% url 'login_signup' %}">
-          {% csrf_token %}
-          <input type="email" name="username" placeholder="Email" required />
-          <input type="password" name="password" placeholder="Password" required />
-          <label class="checkbox">
-            <input type="checkbox" /> Remember me
-          </label>
-          <button type="submit" name="login_submit" class="btn">Login</button>
-          <p>Don't have an account? <a href="#" id="toSignup">Sign Up</a></p>
-        </form>
+            <div class="input-group password-group">
+              <i class="fa fa-lock"></i>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+                name="password"
+                required
+              />
+              <span
+                class="toggle-pass"
+                onclick="togglePassword('loginPassword', this)"
+              >
+                <i class="fa fa-eye"></i>
+              </span>
+            </div>
+
+            <label class="checkbox">
+              <input type="checkbox" /> Remember me
+            </label>
+
+            <p class="forgot-pass">
+              <a href="">Forgot Password?</a>
+            </p>
+
+            <button type="submit" name="login_submit" class="form_btn">
+              Log In
+            </button>
+
+            <p class="switch-text">
+              Don’t have an account?
+              <a href="#" id="toSignup">Sign Up</a>
+            </p>
+
+            <div class="divider"><span>Or Log in with</span></div>
+
+            <div class="social-buttons">
+              <button type="button" class="social google">
+                <i class="fab fa-google"></i>
+              </button>
+              <button type="button" class="social facebook">
+                <i class="fab fa-facebook-f"></i>
+              </button>
+              <button type="button" class="social pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SIGNUP CARD -->
+        <div class="card back" id="signupCard">
+          <h1>Create Account</h1>
+          <form
+            id="signupForm"
+            method="post"
+            action="{% url 'login_signup' %}?mode=signup"
+          >
+            {% csrf_token %}
+
+            <div class="input-group">
+              <i class="fa fa-user"></i>
+              <input
+                type="text"
+                id="fullName"
+                placeholder="Full Name"
+                name="full_name"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <i class="fa fa-envelope"></i>
+              <input
+                type="email"
+                id="signupEmail"
+                placeholder="Email Address"
+                name="email"
+                required
+              />
+            </div>
+
+            <div class="input-group password-group">
+              <i class="fa fa-lock"></i>
+              <input
+                type="password"
+                id="signupPassword"
+                placeholder="Create Password"
+                name="password1"
+                required
+              />
+              <span
+                class="toggle-pass"
+                onclick="togglePassword('signupPassword', this)"
+              >
+                <i class="fa fa-eye"></i>
+              </span>
+            </div>
+
+            <div class="input-group password-group">
+              <i class="fa fa-lock"></i>
+              <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                name="password2"
+                required
+              />
+              <span
+                class="toggle-pass"
+                onclick="togglePassword('confirmPassword', this)"
+              >
+                <i class="fa fa-eye"></i>
+              </span>
+            </div>
+
+            <div class="input-group">
+              <i class="fa fa-map-marker-alt"></i>
+              <input
+                type="text"
+                name="location"
+                placeholder="Location"
+                required
+              />
+            </div>
+
+            <div class="options small">
+              <label>
+                <input type="checkbox" id="agreeTerms" />
+                I agree to the
+                <a href="" class="link">Terms & Privacy</a>
+              </label>
+            </div>
+
+            <input type="hidden" name="username" id="username_hidden" />
+
+            <button type="submit" name="signup_submit" class="form_btn">
+              Sign Up
+            </button>
+
+            <p class="switch-text">
+              Already have an account?
+              <a href="#" id="toLogin">Log In</a>
+            </p>
+
+            <div class="divider"><span>Or sign up with</span></div>
+
+            <div class="social-buttons">
+              <button type="button" class="social google">
+                <i class="fab fa-google"></i>
+              </button>
+              <button type="button" class="social facebook">
+                <i class="fab fa-facebook-f"></i>
+              </button>
+              <button type="button" class="social pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+    </section>
 
-      <!-- SIGNUP CARD -->
-      <div class="card back" id="signupCard">
-        <h1>Sign Up</h1>
-        <form method="post" action="{% url 'login_signup' %}?mode=signup">
-          {% csrf_token %}
-          
-          <input type="text" name="full_name" placeholder="Full Name" required />
-          <input type="tel" name="phone_number" placeholder="Phone Number" required />
-          <input type="email" name="email" placeholder="Email" required />
-          <input type="password" name="password1" placeholder="Password" required />
-          <input type="password" name="password2" placeholder="Confirm Password" required />
-          <input type="text" name="location" placeholder="Location" required />
+    <script>
+      const card = document.getElementById("card-wrapper");
 
-          <!-- Hidden username populated from email -->
-          <input type="hidden" name="username" id="username_hidden" />
+      // Determine mode from Django variable or URL
+      const djangoMode = "{{ mode|default:'' }}";
+      const params = new URLSearchParams(window.location.search);
+      const urlMode = params.get("mode");
+      const mode = djangoMode || urlMode || "login";
 
-          <button type="submit" name="signup_submit" class="btn">Sign Up</button>
-          <p>Already have an account? <a href="#" id="toLogin">Log In</a></p>
-        </form>
-      </div>
-
-    </div>
-  </section>
-
-  <script>
-    const card = document.getElementById("card-wrapper");
-
-    // Determine mode from Django variable or URL
-    const djangoMode = "{{ mode|default:'' }}";
-    const params = new URLSearchParams(window.location.search);
-    const urlMode = params.get('mode');
-    const mode = djangoMode || urlMode || 'login';
-
-    // Set initial state
-    if (mode === 'signup') {
-      card.classList.add("flipped");
-    } else {
-      card.classList.remove("flipped");
-    }
-
-    // Flip buttons
-    const toSignup = document.getElementById("toSignup");
-    const toLogin = document.getElementById("toLogin");
-    if (toSignup && toLogin) {
-      toSignup.addEventListener("click", e => {
-        e.preventDefault();
+      // Set initial state
+      if (mode === "signup") {
         card.classList.add("flipped");
-      });
-      toLogin.addEventListener("click", e => {
-        e.preventDefault();
+      } else {
         card.classList.remove("flipped");
-      });
-    }
+      }
 
-    // Auto-populate hidden username from email
-    const emailInput = document.querySelector('input[name="email"]');
-    const usernameInput = document.getElementById('username_hidden');
-    if (emailInput && usernameInput) {
-      emailInput.addEventListener('input', () => {
-        usernameInput.value = emailInput.value;
-      });
-    }
-  </script>
-</body>
+      // Flip buttons
+      const toSignup = document.getElementById("toSignup");
+      const toLogin = document.getElementById("toLogin");
+      if (toSignup && toLogin) {
+        toSignup.addEventListener("click", (e) => {
+          e.preventDefault();
+          card.classList.add("flipped");
+        });
+        toLogin.addEventListener("click", (e) => {
+          e.preventDefault();
+          card.classList.remove("flipped");
+        });
+      }
+
+      // Auto-populate hidden username from email
+      const emailInput = document.querySelector('input[name="email"]');
+      const usernameInput = document.getElementById("username_hidden");
+      if (emailInput && usernameInput) {
+        emailInput.addEventListener("input", () => {
+          usernameInput.value = emailInput.value;
+        });
+      }
+    </script>
+    <script src="/static/js/log_sign.js"></script>
+  </body>
 </html>

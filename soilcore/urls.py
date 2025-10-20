@@ -16,6 +16,6 @@ urlpatterns = [
 
     # Other pages
     path('soil-types/', views.soil_type_page, name='soil_types'),
-    
+    path('temperature/', views.temperature, name='temperature'),
     path('about/', views.aboutpage, name='aboutpage'),
 ]

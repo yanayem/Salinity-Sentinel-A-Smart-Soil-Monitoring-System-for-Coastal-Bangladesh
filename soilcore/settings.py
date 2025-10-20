@@ -83,26 +83,26 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+#---------------
+#import os
+#from dotenv import load_dotenv
 
-import os
-from dotenv import load_dotenv
+#load_dotenv()  # Load .env variables
 
-load_dotenv()  # Load .env variables
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'railway'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('cqLEnFjEvVxwwuuveHlaMuEykKEftFKw'),
-        'HOST': os.getenv('DB_HOST', 'interchange.proxy.rlwy.net'),
-        'PORT': os.getenv('DB_PORT', '57016'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
-}
-
+#DATABASES = {
+  #  'default': {
+  #      'ENGINE': 'django.db.backends.mysql',
+   #     'NAME': os.getenv('DB_NAME', 'railway'),
+    #    'USER': os.getenv('DB_USER', 'root'),
+     #   'PASSWORD': os.getenv('cqLEnFjEvVxwwuuveHlaMuEykKEftFKw'),
+      #  'HOST': os.getenv('DB_HOST', 'interchange.proxy.rlwy.net'),
+       # 'PORT': os.getenv('DB_PORT', '57016'),
+        #'OPTIONS': {
+         #   'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        #},
+    #}
+#}
+#------------
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

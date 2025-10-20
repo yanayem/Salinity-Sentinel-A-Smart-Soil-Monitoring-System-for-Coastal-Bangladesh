@@ -6,12 +6,11 @@
 }
 
 body {
-  background: linear-gradient(135deg, #041c32, #04293a, #064663);
-  min-height: 700px;
+  background: linear-gradient(135deg, #041C32, #04293A, #064663);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
 }
 
 /* Fixed Navbar */
@@ -24,7 +23,7 @@ nav {
 }
 /* Auth Section */
 .auth-container {
-  margin-top: 40px;
+  margin-top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,11 +44,11 @@ nav {
   position: absolute;
   width: 100%;
   height: auto;
-  background: linear-gradient(135deg, #113f67, #113f67);
+  background: linear-gradient(135deg, #113F67, #113F67);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px #578fca;
+  box-shadow: 0 8px 25px #578FCA;
   padding: 30px;
   color: white;
   top: 0;
@@ -106,28 +105,21 @@ h1 {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.password-group {
-  position: relative;
-}
-
-.password-group .toggle-pass {
+.eye-toggle {
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 12px;
   cursor: pointer;
-  color: #888;
+  color: #ccc;
+  transition: 0.3s;
 }
-
-.password-group .toggle-pass:hover {
-  color: #00ff9c;
+.eye-toggle:hover {
+  color: #fff;
 }
-
 
 .form_btn {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #7adaa5, #239ba7);
+  background: linear-gradient(135deg, #7ADAA5, #239BA7);
   border: none;
   border-radius: 12px;
   color: #fff;
@@ -137,24 +129,7 @@ h1 {
 }
 .form_btn:hover {
   transform: scale(1.03);
-  background: linear-gradient(135deg, #57A6A1, #4ec5bd);
-}
-.forgot-pass {
-  margin: 0.5rem 0 1rem;
-  text-align: right;
-  font-size: 0.875rem;
-}
-
-.forgot-pass a {
-  color: #00ff9c; /* neon green */
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.forgot-pass a:hover {
-  color: #00ffa0;
-  text-shadow: 0 0 8px rgba(0, 255, 156, 0.7);
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
 }
 
 /* ======================
@@ -165,26 +140,27 @@ label {
   color: #c0c0c0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 6px; 
   cursor: pointer;
   padding: 10px 5px;
 }
 
 label input[type="checkbox"] {
-  accent-color: #00ff9c;
+  accent-color: #00FF9C; 
   width: 16px;
   height: 16px;
 }
 
+
 label a.link {
-  color: #00ff9c;
+  color: #00FF9C; 
   text-decoration: none;
   transition: color 0.3s, text-shadow 0.3s;
 }
 
 label a.link:hover {
   color: #ffffff;
-  text-shadow: 0 0 5px #00ff9c;
+  text-shadow: 0 0 5px #00FF9C;
 }
 
 .checkbox {
@@ -200,7 +176,7 @@ label a.link:hover {
   margin-top: 15px;
 }
 .switch-text a {
-  color: #00ff9c;
+  color: #00FF9C;
   text-decoration: none;
   font-weight: 600;
 }
@@ -252,10 +228,10 @@ label a.link:hover {
   transform: scale(1.1);
 }
 .google:hover {
-  background: linear-gradient(155deg, #ea4335, #34a853, #fbbc05, #4285f4);
+  background: linear-gradient(155deg,  #EA4335, #34A853,#FBBC05, #4285F4);
 }
 .facebook:hover {
-  background: #006eff;
+  background: #006eff ;
 }
 .pinterest:hover {
   background: #e60023;
@@ -285,7 +261,13 @@ label a.link:hover {
   }
 }
 
+#loginCard {
+  min-height: 380px; /* smaller card */
+}
 
+#signupCard {
+  min-height: 550px; /* larger card due to extra fields */
+}
 
 /*animation for card appearance*/
 /* ------------------- CARD FLIP ------------------- */

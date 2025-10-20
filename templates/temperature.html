@@ -5,18 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeatherApp</title>
     <link rel="stylesheet" href="/static/css/temp.css" />
+    <!-- Add Font Awesome for icons (if not already included) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   </head>
   <body>
-    <nav>WeaTherApp</nav>
+    <!-- Main Nav (Fixed/Enhanced) -->
+    <nav>
+      <div class="nav-container">
+        <div class="nav-logo">WeaTherApp</div>
+        <ul class="nav-links">
+          <li><a href="#temperature">Temperature</a></li>
+          <li><a href="#forecast">Forecast</a></li>
+          <li><a href="#settings">Settings</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+    <!-- Include additional nav if needed -->
+    {% include "nav.html" %}
 
     <div class="container">
-      <div class="card">
+      <div class="card fade-in">
         <div class="card-body">
           <h4>Please Allow Browser Location Access</h4>
+          <p class="subtitle">We'll use it to fetch accurate weather data.</p>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card fade-in" id="temperature">
         <h5 class="card-header">Temperature</h5>
         <div class="card-body">
           <form method="POST">
@@ -37,18 +57,55 @@
                 placeholder="Enter Longitude"
               />
             </div>
-            <button type="submit">Show Temperature</button>
+            <button type="submit" class="btn-primary">Show Temperature</button>
           </form>
         </div>
       </div>
 
       {% if temp %}
-      <div class="card">
+      <div class="card fade-in" id="temp-card">
         <div class="card-body">
-          Currently <strong>{{ temp }}&deg; Celsius</strong>
+          <div class="temp-display" id="temp-display">
+            Currently <strong>{{ temp }}&deg; Celsius</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- More Information Section -->
+      <div class="more-info-section slide-in">
+        <h3 class="section-title">More Information</h3>
+        <div class="info-grid">
+          <!-- Air Quality -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-wind"></i></div>
+            <h6>Air Quality</h6>
+            <p class="info-value">{{ aqi|default:"Good" }} (AQI: {{ aqi_value|default:"25" }})</p>
+            <p class="info-desc">Air is clean and safe for outdoor activities.</p>
+          </div>
+          <!-- Road Conditions -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-road"></i></div>
+            <h6>Road Conditions</h6>
+            <p class="info-value">{{ road_condition|default:"Clear" }}</p>
+            <p class="info-desc">Roads are dry and traffic is flowing smoothly.</p>
+          </div>
+          <!-- Weather Analysis -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-chart-line"></i></div>
+            <h6>Weather Analysis</h6>
+            <p class="info-value">Humidity: {{ humidity|default:"60" }}% | Wind: {{ wind_speed|default:"10" }} km/h</p>
+            <p class="info-desc">Expect mild weather with possible showers later.</p>
+          </div>
         </div>
       </div>
       {% endif %}
+    </div>
+
+    <!-- Animated background elements for weather feel -->
+    <div class="background-elements">
+      <div class="cloud cloud1"></div>
+      <div class="cloud cloud2"></div>
+      <div class="cloud cloud3"></div>
     </div>
 
     <script>
@@ -67,6 +124,38 @@
       }
 
       getLocation();
+
+      // Dynamic background based on temperature
+      function updateBackground() {
+        const tempDisplay = document.getElementById("temp-display");
+        if (tempDisplay) {
+          const tempText = tempDisplay.textContent;
+          const tempMatch = tempText.match(/(\d+)/); // Extract number from "Currently X°Celsius"
+          if (tempMatch) {
+            const temp = parseInt(tempMatch[1]);
+            const body = document.body;
+            if (temp > 25) {
+              body.style.background = "linear-gradient(135deg, #ff7e5f, #feb47b)"; // Warm/hot
+            } else if (temp >= 10) {
+              body.style.background = "linear-gradient(135deg, #74b9ff, #a8e6cf)"; // Mild
+            } else {
+              body.style.background = "linear-gradient(135deg, #667eea, #ffffff)"; // Cold
+            }
+          }
+        } else {
+          document.body.style.background = "linear-gradient(135deg, #87ceeb, #e0f6ff)"; // Default sky-blue
+        }
+      }
+
+      // Run on page load and after any dynamic content
+      window.addEventListener("load", updateBackground);
+
+      // Hamburger menu toggle for mobile nav
+      const hamburger = document.getElementById("hamburger");
+      const navLinks = document.querySelector(".nav-links");
+      hamburger.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+      });
     </script>
   </body>
 </html>

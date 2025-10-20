@@ -10,7 +10,7 @@
   {% include "nav.html" %}
 
   <section class="home-section">
-   <div class="overlay"></div>
+    <div class="overlay"></div>
     <div class="container">
       <div class="content animate">
         <h1>Salinity Sentinel – A Smart Soil Monitoring System for Coastal Bangladesh</h1>
@@ -24,7 +24,6 @@
   <script>
     // Fade-in animation when scrolled into view
     const animatedElements = document.querySelectorAll('.animate');
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){
@@ -32,7 +31,6 @@
         }
       });
     }, { threshold: 0.1 });
-
     animatedElements.forEach(el => observer.observe(el));
   </script>
 </body>

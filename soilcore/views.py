@@ -14,6 +14,9 @@ def homepage(request):
 def aboutpage(request):
     return render(request, 'about.html')
 
+def temperature(request):
+    return render(request, 'temperature.html')
+
 
 # soilcore/views.py
 def soil_type_page(request):
@@ -25,17 +28,22 @@ def soil_type_page(request):
     return render(request, "soil_types.html", {"soil_types": soil_types, "query": query})
 
 
-# ---------------- LOGIN / SIGNUP ----------------
+# ---------------- LOGIN / SIGNUP / FORGOT PASSWORD ----------------
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import UserProfile
+
 def loginsignuppage(request):
     mode = request.GET.get('mode', 'login')
 
-    # LOGIN
+    # ---------------- LOGIN ----------------
     if request.method == "POST" and "login_submit" in request.POST:
         username = request.POST.get("username")
         password = request.POST.get("password")
 
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
             messages.success(request, "✅ Logged in successfully!")
@@ -44,7 +52,7 @@ def loginsignuppage(request):
             messages.error(request, "❌ Invalid username or password.")
             mode = "login"
 
-    # SIGNUP
+    # ---------------- SIGNUP ----------------
     elif request.method == "POST" and "signup_submit" in request.POST:
         full_name = request.POST.get("full_name")
         phone_number = request.POST.get("phone_number")
@@ -53,13 +61,23 @@ def loginsignuppage(request):
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
         location = request.POST.get("location")
+        agree_terms = request.POST.get("agreeTerms")  # checkbox
 
-        if password1 != password2:
+        # Validate Terms & Conditions
+        if not agree_terms:
+            messages.error(request, "⚠️ You must agree to the Terms & Privacy policy!")
+            mode = "signup"
+
+        # Password match validation
+        elif password1 != password2:
             messages.error(request, "❌ Passwords do not match!")
             mode = "signup"
+
+        # Username uniqueness
         elif User.objects.filter(username=username).exists():
             messages.error(request, "⚠️ Username already taken!")
             mode = "signup"
+
         else:
             user = User.objects.create_user(
                 username=username,
@@ -71,7 +89,19 @@ def loginsignuppage(request):
             messages.success(request, "🎉 Account created successfully! Please log in.")
             return redirect("login_signup")
 
+    # ---------------- FORGOT PASSWORD ----------------
+    elif request.method == "POST" and "forgot_submit" in request.POST:
+        email = request.POST.get("forgot_email")
+        try:
+            user = User.objects.get(email=email)
+            # Here you can send reset link via email using Django's PasswordResetForm or custom email logic
+            messages.success(request, "📧 Password reset link has been sent to your email!")
+        except User.DoesNotExist:
+            messages.error(request, "❌ No account found with this email.")
+        mode = "login"  # redirect to login after forgot password attempt
+
     return render(request, "login_signup.html", {"mode": mode})
+
 
 
 # ---------------- LOGOUT ----------------

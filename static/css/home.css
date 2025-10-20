@@ -1,16 +1,21 @@
-/* Basic Layout */
+/* ===============================
+   Base Dark Mode Layout
+=============================== */
 body {
   margin: 0;
-  background: #fff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0a0a0a;
+  color: #eaeaea;
+  overflow-x: hidden;
 }
 
-/* Home Section */
+/* ===============================
+   Home Section
+=============================== */
 .home-section {
-  position: relative; /* required for overlay */
- 
-   width: 100%;
-  height: 100vh; /* full viewport height */
+  position: relative;
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,76 +24,90 @@ body {
   overflow: hidden;
 }
 
-/* Dark Overlay */
+/* Dark Glass Overlay */
 .home-section .overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent dark overlay */
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(6px);
   z-index: 1;
 }
 
-/* Content above overlay */
-.home-section .content {
-  position: relative;
-  z-index: 2; /* ensures content sits above overlay */
-  background: rgba(255, 255, 255, 0.85); /* optional: semi-transparent white */
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(10, 10, 10, 0.1);
-}
-
-
-/* Container */
+/* ===============================
+   Content Box
+=============================== */
 .container {
-  max-width: 1200px;
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
   width: 100%;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* Content Box */
 .content {
-  position: relative; /* Sit above overlay */
+  position: relative;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.85); /* Semi-transparent white for readability */
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  background: rgba(25, 25, 25, 0.55); /* translucent dark box */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px 50px;
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   opacity: 0;
-  transform: translateY(30px);
-  transition: all 1s ease;
+  transform: translateY(50px) scale(0.95);
+  transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(12px);
 }
 
-/* Fade-in Animation when visible */
+/* Animation trigger */
 .content.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  box-shadow: 0 0 30px rgba(0, 255, 200, 0.15);
 }
 
-/* Typography */
+/* ===============================
+   Typography
+=============================== */
 .content h1 {
-  font-size: 2rem;
+  font-size: 2.4rem;
   margin-bottom: 20px;
-  color: #1B3C53;
+  color: #00ffc3;
+  text-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
+  animation: glow 2.5s infinite alternate;
 }
 
 .content p {
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.8;
-  color: #333;
+  color: #ccc;
 }
 
-/* Responsive Design */
+/* ===============================
+   Glow Animation
+=============================== */
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px rgba(0,255,200,0.2);
+  }
+  to {
+    text-shadow: 0 0 25px rgba(0,255,200,0.6);
+  }
+}
+
+/* ===============================
+   Responsive
+=============================== */
 @media (max-width: 900px) {
   .content {
-    padding: 20px;
+    padding: 25px 30px;
   }
 
   .content h1 {
-    font-size: 1.8rem;
+    font-size: 1.9rem;
   }
 
   .content p {
@@ -102,11 +121,11 @@ body {
   }
 
   .content {
-    padding: 15px 20px;
+    padding: 20px;
   }
 
   .content h1 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .content p {
