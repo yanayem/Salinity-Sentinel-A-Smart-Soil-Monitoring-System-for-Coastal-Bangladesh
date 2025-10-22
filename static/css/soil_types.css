@@ -2,17 +2,17 @@ body {
   font-family: system-ui, sans-serif;
   margin: 0;
   background: #f4f4f4;
-  overflow-x: hidden; /* prevent horizontal scroll if any */
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 1200px;
-  margin: 20px auto; /* reduce vertical margin to save space */
+  margin: 20px auto;
   padding: 0 10px;
 }
 
 .soil-type-section {
-  padding-top: 80px; /* smaller padding for mobile/tablet */
+  padding-top: 80px;
   padding-bottom: 20px;
 }
 
@@ -20,10 +20,61 @@ h1 {
   text-align: center;
   color: #1B3C53;
   margin-bottom: 15px;
-  font-size: 1.5rem; /* smaller heading for mobile */
+  font-size: 1.5rem;
 }
 
-/* Search Input */
+/* ===================== Add Soil Form ===================== */
+.add-soil-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.add-soil-form h3 {
+  margin-bottom: 15px;
+  color: #1B3C53;
+  text-align: center;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.add-soil-form input,
+.add-soil-form textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.add-soil-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.submit-btn {
+  background-color: #0077b6;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto 0 auto;
+}
+
+.submit-btn:hover {
+  background-color: #005f8a;
+}
+
+/* ===================== Search & Table ===================== */
 #searchInput {
   width: 100%;
   padding: 8px;
@@ -33,7 +84,6 @@ h1 {
   font-size: 0.9rem;
 }
 
-/* Filter Container */
 .filter-container {
   display: flex;
   flex-wrap: wrap;
@@ -43,7 +93,7 @@ h1 {
 
 .filter-container input,
 .filter-container button {
-  flex: 1 1 45%; /* fit 2 per row on narrow screens */
+  flex: 1 1 45%;
   min-width: 100px;
   padding: 6px;
   font-size: 0.9rem;
@@ -72,7 +122,10 @@ h1 {
   background-color: #333;
 }
 
-/* Table */
+.table-wrapper {
+  overflow-x: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -84,10 +137,10 @@ table {
 }
 
 th, td {
-  padding: 8px 6px; /* smaller padding to save vertical space */
+  padding: 8px 6px;
   text-align: left;
   word-wrap: break-word;
-  font-size: 0.85rem; /* smaller font to prevent scroll */
+  font-size: 0.85rem;
 }
 
 th {
@@ -99,59 +152,57 @@ tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-/* Column widths */
-#soilTable th:nth-child(1), #soilTable td:nth-child(1) { width: 20%; }
-#soilTable th:nth-child(2), #soilTable td:nth-child(2) { width: 40%; }
-#soilTable th:nth-child(3), #soilTable td:nth-child(3) { width: 20%; text-align: center; }
+#soilTable th:nth-child(1), #soilTable td:nth-child(1) { width: 18%; }
+#soilTable th:nth-child(2), #soilTable td:nth-child(2) { width: 25%; }
+#soilTable th:nth-child(3), #soilTable td:nth-child(3) { width: 15%; text-align: center; }
 #soilTable th:nth-child(4), #soilTable td:nth-child(4) { width: 20%; }
+#soilTable th:nth-child(5), #soilTable td:nth-child(5) { width: 12%; }
 
-.translation-controls {
-  margin-bottom: 20px;
-}
-.translation-controls button {
-  padding: 8px 16px;
-  margin-right: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* Mobile/Tablet */
-/* Mobile / Tablet Responsive */
+/* ===================== Responsive ===================== */
 @media (max-width: 768px) {
   .soil-type-section {
     padding-top: 60px;
     padding-bottom: 10px;
   }
 
+  .add-soil-form {
+    padding: 15px;
+  }
+
   th, td {
     padding: 6px 4px;
-    font-size: 0.75rem; /* smaller font */
-  }
-
-  /* Table column widths */
-  #soilTable th:nth-child(1), #soilTable td:nth-child(1) { width: 22%; }
-  #soilTable th:nth-child(2), #soilTable td:nth-child(2) { width: 36%; }
-  #soilTable th:nth-child(3), #soilTable td:nth-child(3) { width: 22%; }
-  #soilTable th:nth-child(4), #soilTable td:nth-child(4) { width: 20%; }
-
-  /* Stack filter inputs/buttons nicely */
-  .filter-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-
-  .filter-container input, 
-  .filter-container button,
-  .translation-controls button {
-    flex: 1 1 48%;
     font-size: 0.75rem;
-    padding: 6px 8px;
   }
 
-  /* Make table scrollable horizontally if necessary */
-  .table-wrapper {
-    overflow-x: auto;
+  .filter-container input,
+  .filter-container button,
+  .submit-btn {
+    font-size: 0.8rem;
   }
 }
 
+
+.action-icons a {
+  margin: 0 5px;
+  color: #555;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+.action-icons a:hover {
+  color: #007bff; /* Edit hover */
+}
+
+.action-icons a.delete-icon:hover {
+  color: #dc3545; /* Delete hover */
+}
+
+
+#soilTable td input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 6px;
+  font-family: inherit;
+  font-size: inherit;
+}

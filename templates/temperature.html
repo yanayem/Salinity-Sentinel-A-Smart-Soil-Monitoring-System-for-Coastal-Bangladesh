@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeatherApp</title>
     <link rel="stylesheet" href="/static/css/temp.css" />
-    <!-- Add Font Awesome for icons (if not already included) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   </head>
   <body>
-    <!-- Main Nav (Fixed/Enhanced) -->
+    <!-- Main Nav -->
     <nav>
       <div class="nav-container">
         <div class="nav-logo">WeaTherApp</div>
@@ -137,13 +136,13 @@
             if (temp > 25) {
               body.style.background = "linear-gradient(135deg, #ff7e5f, #feb47b)"; // Warm/hot
             } else if (temp >= 10) {
-              body.style.background = "linear-gradient(135deg, #74b9ff, #a8e6cf)"; // Mild
+              body.style.background = "linear-gradient(135deg, #74b9ff, #a8e6cf)";
             } else {
-              body.style.background = "linear-gradient(135deg, #667eea, #ffffff)"; // Cold
+              body.style.background = "linear-gradient(135deg, #667eea, #ffffff)"; 
             }
           }
         } else {
-          document.body.style.background = "linear-gradient(135deg, #87ceeb, #e0f6ff)"; // Default sky-blue
+          document.body.style.background = "linear-gradient(135deg, #87ceeb, #e0f6ff)"; 
         }
       }
 

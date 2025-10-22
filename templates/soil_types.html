@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Soil Types in Bangladesh</title>
-    <link rel="stylesheet" href="/static/css/nav.css" />
-    <link rel="stylesheet" href="/static/css/soil_types.css" />
-  </head>
-  <body>
-    {% include "nav.html" %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soil Types in Bangladesh</title>
+  <link rel="stylesheet" href="/static/css/soil_types.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  {% include "nav.html" %}
 
-    <section class="soil-type-section">
-      <div class="container">
-        <h1>Soil Types in Bangladesh</h1>
+  <section class="soil-type-section">
+    <div class="container">
+      <h1>Soil Types in Bangladesh</h1>
 
-        <!-- General search -->
-        <input type="text" id="searchInput" placeholder="Search Soil Type..." />
-        
+      <div class="add-soil-btn-container">
+        <a href="{% url 'add_soil_type' %}" class="add-soil-link">➕ Add New Soil Type</a>
+      </div>
 
-        <!-- pH Filter -->
-        <div class="filter-container">
-          <input type="number" id="phMin" placeholder="Min pH" step="0.1" />
-          <input type="number" id="phMax" placeholder="Max pH" step="0.1" />
-          <button id="phFilterBtn">&#128269; Filter</button>
-          <button id="phResetBtn">&#10006; Reset</button>
-        </div>
+      <input type="text" id="searchInput" placeholder="Search Soil Type..." />
+      <div class="filter-container">
+        <input type="number" id="phMin" placeholder="Min pH" step="0.1" />
+        <input type="number" id="phMax" placeholder="Max pH" step="0.1" />
+        <button id="phFilterBtn">&#128269; Filter</button>
+        <button id="phResetBtn">&#10006; Reset</button>
+      </div>
 
-        <!-- Soil Table -->
+      <div class="table-wrapper">
         <table id="soilTable">
           <thead>
             <tr>
@@ -34,73 +34,37 @@
               <th>Description</th>
               <th>pH Range</th>
               <th>Suitable Crops</th>
+              <th>Location</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for soil in soil_types %}
-            <tr>
+            <tr data-id="{{ soil.id }}">
               <td>{{ soil.name }}</td>
               <td>{{ soil.description }}</td>
-              <td>{{ soil.ph_range }}</td>
+              <td>{{ soil.ph_min }} - {{ soil.ph_max }}</td>
               <td>{{ soil.suitable_crops }}</td>
+              <td>{{ soil.location }}</td>
+              <td class="action-icons">
+                <a href="javascript:void(0)" class="edit-icon" title="Edit" onclick="editRow(this)">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                <a href="javascript:void(0)" class="save-icon" title="Save" onclick="saveRow(this)" style="display:none">
+                  <i class="fa fa-check"></i>
+                </a>
+                <a href="{% url 'delete_soil_type' soil.id %}" class="delete-icon" title="Delete">
+                  <i class="fa fa-trash"></i>
+                </a>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <script>
-      const searchInput = document.getElementById("searchInput");
-      const tableRows = document
-        .getElementById("soilTable")
-        .getElementsByTagName("tbody")[0]
-        .getElementsByTagName("tr");
-
-      // General search
-      searchInput.addEventListener("keyup", function () {
-        const filter = searchInput.value.toLowerCase();
-        for (let i = 0; i < tableRows.length; i++) {
-          const cells = tableRows[i].getElementsByTagName("td");
-          let rowText = "";
-          for (let j = 0; j < cells.length; j++) {
-            rowText += cells[j].textContent.toLowerCase() + " ";
-          }
-          tableRows[i].style.display = rowText.includes(filter) ? "" : "none";
-        }
-      });
-
-      // pH filter
-      const phMinInput = document.getElementById("phMin");
-      const phMaxInput = document.getElementById("phMax");
-      const phFilterBtn = document.getElementById("phFilterBtn");
-      const phResetBtn = document.getElementById("phResetBtn");
-
-      phFilterBtn.addEventListener("click", function () {
-        const min = parseFloat(phMinInput.value);
-        const max = parseFloat(phMaxInput.value);
-        for (let i = 0; i < tableRows.length; i++) {
-          const phCell = tableRows[i].getElementsByTagName("td")[2];
-          const phText = phCell.textContent || phCell.innerText;
-          let phParts = phText.split("-").map((p) => parseFloat(p.trim()));
-          let phMin = phParts[0];
-          let phMax = phParts[1] || phMin;
-
-          if ((!isNaN(min) && phMax < min) || (!isNaN(max) && phMin > max)) {
-            tableRows[i].style.display = "none";
-          } else {
-            tableRows[i].style.display = "";
-          }
-        }
-      });
-
-      phResetBtn.addEventListener("click", function () {
-        phMinInput.value = "";
-        phMaxInput.value = "";
-        for (let i = 0; i < tableRows.length; i++) {
-          tableRows[i].style.display = "";
-        }
-      });
-    </script>
-  </body>
+  <script src="/static/js/soil_types.js"></script>
+</body>
 </html>

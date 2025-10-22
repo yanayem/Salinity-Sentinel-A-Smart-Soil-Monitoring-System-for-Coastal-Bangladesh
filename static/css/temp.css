@@ -1,3 +1,5 @@
+/*=================global styles and resets=================*/
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,7 +8,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #87ceeb, #e0f6ff); /* Default sky-blue gradient */
+  background: linear-gradient(135deg, #87ceeb, #e0f6ff);
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -15,7 +17,7 @@ body {
   transition: background 0.5s ease; /* Smooth background transition */
 }
 
-/* Enhanced Nav */
+
 nav {
   background: linear-gradient(135deg, #007bff, #0056b3);
   padding: 0;
@@ -24,6 +26,8 @@ nav {
   z-index: 1000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+/* ==========Main CSS============= */
 
 .nav-container {
   display: flex;
@@ -71,7 +75,8 @@ nav {
   transition: 0.3s;
 }
 
-/* Mobile Nav */
+/* ====== Responsive Navigation======= */
+
 @media (max-width: 768px) {
   .nav-links {
     position: absolute;
@@ -218,7 +223,7 @@ strong {
   font-weight: 600;
 }
 
-/* More Information Section */
+
 .more-info-section {
   margin-top: 3rem;
   opacity: 0;
@@ -286,7 +291,6 @@ strong {
   font-size: 0.9rem;
 }
 
-/* Background animated elements (clouds) */
 .background-elements {
   position: fixed;
   top: 0;
@@ -334,7 +338,6 @@ strong {
   }
 }
 
-/* Media Queries for Responsiveness */
 @media (min-width: 600px) {
   .form-row {
     flex-direction: row;

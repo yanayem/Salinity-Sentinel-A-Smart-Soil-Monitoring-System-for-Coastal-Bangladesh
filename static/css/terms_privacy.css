@@ -7,7 +7,7 @@ body {
   line-height: 1.6;
 }
 
-/* ---------- HEADER ---------- */
+
 .header {
   background: #0a3d62;
   color: #fff;
@@ -42,7 +42,7 @@ body {
   opacity: 0.8;
 }
 
-/* ---------- MAIN CONTENT ---------- */
+
 .content-container {
   max-width: 900px;
   margin: 2rem auto;

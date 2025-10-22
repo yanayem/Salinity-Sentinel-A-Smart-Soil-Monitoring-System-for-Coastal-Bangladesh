@@ -51,10 +51,9 @@ header p {
 /* ==========================
    Card Grid (Responsive)
 ========================== */
-/* Card container grid */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Desktop: 3 cards per row */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 25px;
   padding: 60px 10%;
   max-width: 1200px;
@@ -65,19 +64,18 @@ header p {
 
 @media (max-width: 992px) {
   .card-grid {
-    grid-template-columns: repeat(2, 1fr); /* Tablet: 2 per row */
+    grid-template-columns: repeat(2, 1fr); 
     padding: 50px 8%;
   }
 }
 
 @media (max-width: 600px) {
   .card-grid {
-    grid-template-columns: 1fr; /* Mobile: 1 per row */
+    grid-template-columns: 1fr; 
     padding: 40px 6%;
   }
 }
 
-/* Individual card styling */
 
 @keyframes fadeInGrid {
   from { opacity: 0; transform: translateY(40px); }

@@ -13,7 +13,7 @@ body {
   align-items: center;
 }
 
-/* Fixed Navbar */
+
 nav {
   position: fixed;
   top: 0;
@@ -21,7 +21,7 @@ nav {
   width: 100%;
   z-index: 1000;
 }
-/* Auth Section */
+
 .auth-container {
   margin-top: 100px;
   display: flex;
@@ -31,7 +31,6 @@ nav {
   padding: 20px;
 }
 
-/* Card */
 .card-3d-wrapper {
   width: 100%;
   max-width: 420px;
@@ -262,20 +261,18 @@ label a.link:hover {
 }
 
 #loginCard {
-  min-height: 380px; /* smaller card */
+  min-height: 380px; 
 }
 
 #signupCard {
-  min-height: 550px; /* larger card due to extra fields */
+  min-height: 550px; 
 }
 
-/*animation for card appearance*/
-/* ------------------- CARD FLIP ------------------- */
 .card-3d-wrapper {
   transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
 
-/* ------------------- ERROR MSG ANIMATION ------------------- */
+
 .error-msg {
   color: #e74c3c;
   font-size: 0.9rem;
@@ -291,7 +288,7 @@ label a.link:hover {
   transform: translateY(0);
 }
 
-/* ------------------- EYE TOGGLE ANIMATION ------------------- */
+
 .eye-toggle {
   transition: color 0.2s ease, transform 0.2s ease;
 }

@@ -7,7 +7,7 @@ body {
 }
 
 .main-content {
-  margin-left: 240px; /* sidebar width */
+  margin-left: 240px; 
   padding: 2rem;
   width: 100%;
 }
@@ -25,7 +25,7 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Cards */
+
 .settings-card {
   background: #fff;
   border-radius: 12px;
@@ -40,7 +40,7 @@ body {
   color: #0a3d62;
 }
 
-/* Rows */
+
 .setting-row {
   display: flex;
   justify-content: space-between;
@@ -58,7 +58,7 @@ body {
   color: #555;
 }
 
-/* Device list */
+
 .device-list {
   list-style: none;
   padding: 0;
@@ -77,7 +77,7 @@ body {
   border-bottom: none;
 }
 
-/* Buttons */
+
 .btn {
   padding: 0.4rem 1rem;
   border-radius: 6px;
@@ -105,7 +105,7 @@ body {
   background: #218838;
 }
 
-/* Toggle Switch */
+
 .switch {
   position: relative;
   display: inline-block;
@@ -142,7 +142,7 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .main-content { margin-left: 0; padding: 1rem; }
 

@@ -8,7 +8,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/log_sign.css' %}" />
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -223,14 +222,12 @@
       const urlMode = params.get("mode");
       const mode = djangoMode || urlMode || "login";
 
-      // Set initial state
       if (mode === "signup") {
         card.classList.add("flipped");
       } else {
         card.classList.remove("flipped");
       }
 
-      // Flip buttons
       const toSignup = document.getElementById("toSignup");
       const toLogin = document.getElementById("toLogin");
       if (toSignup && toLogin) {
@@ -244,7 +241,6 @@
         });
       }
 
-      // Auto-populate hidden username from email
       const emailInput = document.querySelector('input[name="email"]');
       const usernameInput = document.getElementById("username_hidden");
       if (emailInput && usernameInput) {

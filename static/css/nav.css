@@ -47,7 +47,6 @@ body {
   font-weight: 600;
 }
 
-/* Desktop search + buttons */
 .search_btns_desktop {
   display: flex;
   align-items: center;
@@ -65,7 +64,6 @@ body {
   gap: 10px;
 }
 
-/* Buttons */
 .btn {
   padding: 8px 16px;
   border-radius: 6px;
@@ -89,7 +87,6 @@ body {
   background-color: #333;
 }
 
-/* Navbar links */
 .navbar {
   display: flex;
   align-items: center;
@@ -112,14 +109,12 @@ body {
   background-color: #819a91;
 }
 
-/* Mobile Controls */
 .mobile_controls {
   display: none;
   align-items: center;
   gap: 10px;
 }
 
-/* Mobile search icon */
 .mobile_search_icon {
   position: relative;
   display: flex;
@@ -156,30 +151,29 @@ body {
   color: #555;
   pointer-events: none;
 }
-/* Hide mobile login on desktop */
+
 .mobile_login_btn {
-  display: none; /* hide by default */
+  display: none; 
 }
-/* Hamburger menu */
+
 .menu_toggle {
   font-size: 26px;
   cursor: pointer;
   color: white;
 }
 
-/* Mobile Navbar */
+
 @media (max-width: 900px) {
-  /* Hide desktop search/buttons */
   .search_btns_desktop {
     display: none;
   }
 
-  /* Show mobile controls */
+  
   .mobile_controls {
     display: flex;
   }
 
-  /* Navbar dropdown */
+  
   .navbar {
     display: none;
     flex-direction: column;
@@ -202,7 +196,7 @@ body {
     border-bottom: 1px solid #819a91;
   }
 
-  /* Mobile login/signup in one row, half-half */
+  
   .mobile_login_btn {
     display: flex;
     justify-content: space-around;

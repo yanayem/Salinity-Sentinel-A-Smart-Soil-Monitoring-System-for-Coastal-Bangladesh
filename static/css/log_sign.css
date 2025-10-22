@@ -14,7 +14,7 @@ body {
   padding: 20px;
 }
 
-/* Fixed Navbar */
+
 nav {
   position: fixed;
   top: 0;
@@ -22,7 +22,7 @@ nav {
   width: 100%;
   z-index: 1000;
 }
-/* Auth Section */
+
 .auth-container {
   margin-top: 40px;
   display: flex;
@@ -32,7 +32,7 @@ nav {
   padding: 20px;
 }
 
-/* Card */
+
 .card-3d-wrapper {
   width: 100%;
   max-width: 420px;
@@ -146,7 +146,7 @@ h1 {
 }
 
 .forgot-pass a {
-  color: #00ff9c; /* neon green */
+  color: #00ff9c; 
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease, text-shadow 0.3s ease;
@@ -268,7 +268,7 @@ label a.link:hover {
   font-weight: 500;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .card-3d-wrapper {
     width: 90%;
@@ -287,13 +287,12 @@ label a.link:hover {
 
 
 
-/*animation for card appearance*/
-/* ------------------- CARD FLIP ------------------- */
+
 .card-3d-wrapper {
   transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
 
-/* ------------------- ERROR MSG ANIMATION ------------------- */
+
 .error-msg {
   color: #e74c3c;
   font-size: 0.9rem;
@@ -309,7 +308,7 @@ label a.link:hover {
   transform: translateY(0);
 }
 
-/* ------------------- EYE TOGGLE ANIMATION ------------------- */
+
 .eye-toggle {
   transition: color 0.2s ease, transform 0.2s ease;
 }

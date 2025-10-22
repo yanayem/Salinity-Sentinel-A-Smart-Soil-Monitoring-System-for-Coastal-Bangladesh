@@ -78,25 +78,21 @@
       const fbSearchInput = document.getElementById("fbSearchInput");
       const topNav = document.querySelector(".top_nav_bar");
 
-      // Hamburger toggle
       menuToggle.addEventListener("click", () => {
         navbar.classList.toggle("active");
       });
 
-      // Mobile search toggle
       fbSearch.addEventListener("click", () => {
         fbSearch.classList.toggle("active");
         fbSearchInput.focus();
       });
 
-      // Collapse search if click outside
       document.addEventListener("click", (e) => {
         if (!fbSearch.contains(e.target)) {
           fbSearch.classList.remove("active");
         }
       });
 
-      // Sticky shadow
       window.addEventListener("scroll", () => {
         topNav.classList.toggle("scrolled", window.scrollY > 10);
       });

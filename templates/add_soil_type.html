@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Soil Type</title>
+    <link rel="stylesheet" href="/static/css/soil_add.css" />
+  </head>
+  <body>
+    <!-- Subtle particle canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <section class="add-soil-section">
+      <div class="container">
+        <h1>Add New Soil Type</h1>
+        <p class="page-desc">
+          Fill out the form below to add a new soil type to the database.
+        </p>
+
+        <form method="POST" class="add-soil-form">
+          {% csrf_token %}
+
+          <!-- Row 1: Soil Name | Location -->
+          <div class="form-row">
+            <input type="text" name="name" placeholder="Soil Name" required />
+            <input
+              type="text"
+              name="location"
+              placeholder="Location (optional)"
+            />
+          </div>
+
+          <!-- Row 2: Min pH | Max pH -->
+          <div class="form-row">
+            <input
+              type="number"
+              name="ph_min"
+              step="0.1"
+              placeholder="Min pH"
+              required
+            />
+            <input
+              type="number"
+              name="ph_max"
+              step="0.1"
+              placeholder="Max pH"
+              required
+            />
+          </div>
+
+          <!-- Full width fields -->
+          <textarea
+            name="description"
+            placeholder="Description..."
+            required
+          ></textarea>
+          <input
+            type="text"
+            name="suitable_crops"
+            placeholder="Suitable Crops"
+            style="margin-top: 15px;"
+          />
+
+          <button type="submit" class="submit-btn">Save Soil Type</button>
+          <a href="{% url 'soil_types' %}" class="back-btn">← Back to List</a>
+        </form>
+      </div>
+    </section>
+
+    <script>
+      
+      const canvas = document.getElementById("particle-canvas");
+      const ctx = canvas.getContext("2d");
+      let particles = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = (Math.random() - 0.5) * 0.2;
+          this.speedY = (Math.random() - 0.5) * 0.2;
+          this.opacity = Math.random() * 0.3 + 0.1;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (
+            this.x < 0 ||
+            this.x > canvas.width ||
+            this.y < 0 ||
+            this.y > canvas.height
+          )
+            this.reset();
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < 60; i++) particles.push(new Particle());
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    </script>
+  </body>
+</html>

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'soilcore',  # 👈 Your custom app
+    'soilcore', 
 ]
 
 MIDDLEWARE = [
@@ -74,13 +74,9 @@ WSGI_APPLICATION = 'soilcore.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {  # All data goes to MySQL
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'soil_db',
-        'USER': 'root',
-        'PASSWORD': '',   # your MySQL password
-        'HOST': 'localhost',
-        'PORT': '3306',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 #---------------
@@ -145,3 +141,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [BASE_DIR, "static"]
+
+
