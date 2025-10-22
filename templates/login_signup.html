@@ -172,9 +172,16 @@
 
             <div class="options small">
               <label>
-                <input type="checkbox" id="agreeTerms" />
+                <input
+                  type="checkbox"
+                  id="agreeTerms"
+                  name="agreeTerms"
+                  required
+                />
                 I agree to the
-                <a href="" class="link">Terms & Privacy</a>
+                <a href="{% url 'terms_privacy' %}" target="_blank" class="link"
+                  >Terms & Privacy Policy</a
+                >
               </label>
             </div>
 

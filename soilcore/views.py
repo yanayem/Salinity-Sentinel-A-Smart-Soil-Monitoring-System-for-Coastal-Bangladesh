@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import SoilType, UserProfile,SoilData  # ✅ fixed imports
+from .models import SoilType, UserProfile,SoilData,Newsletter  # ✅ fixed imports
 
 
 # ---------------- HOME / ABOUT ----------------
@@ -138,3 +138,24 @@ def dashboard(request):
         "humidity_values": humidity_values,
         "timestamps": timestamps,
     })
+def terms_privacy(request):
+    return render(request, 'terms_privacy.html')
+
+def profilepage(request):
+    return render(request, 'profile.html')
+
+def settingpage(request):
+    return render(request, 'settings.html')
+
+def subscribe_newsletter(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email:
+            if Newsletter.objects.filter(email=email).exists():
+                messages.error(request, "This email is already subscribed.")
+            else:
+                Newsletter.objects.create(email=email)
+                messages.success(request, "Thank you for subscribing to our newsletter!")
+        else:
+            messages.error(request, "Please enter a valid email.")
+    return redirect(request.META.get('HTTP_REFERER', '/'))

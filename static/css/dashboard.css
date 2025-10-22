@@ -195,3 +195,26 @@ canvas {
     grid-template-columns: 1fr;
   }
 }
+
+.sidebar {
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar.open {
+  transform: translateX(-240px);
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 200;
+  background: #0a3d62;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}

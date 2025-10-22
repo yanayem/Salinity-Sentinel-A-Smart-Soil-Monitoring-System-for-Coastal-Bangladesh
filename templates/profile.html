@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile | Soil Monitor</title>
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  {% include 'sidebar.html' %}
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="profile-container">
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <img src="{% static 'media/user.png' %}" alt="User Avatar">
+        </div>
+        <h2 class="username">{{ user.first_name|default:user.username }}</h2>
+        <p class="user-role">Soil Analyst</p>
+        <button id="editBtn" class="edit-btn">Edit Profile</button>
+      </div>
+
+      <!-- Account Info Card -->
+      <div class="info-card">
+        <h3>Account Information</h3>
+        <div class="info-row"><span>Full Name:</span> <span>{{ user.first_name }} {{ user.last_name }}</span></div>
+        <div class="info-row"><span>Email:</span> <span>{{ user.email }}</span></div>
+        <div class="info-row"><span>Phone:</span> <span>{{ profile.phone_number|default:"Not added" }}</span></div>
+        <div class="info-row"><span>Location:</span> <span>{{ profile.location|default:"Not added" }}</span></div>
+      </div>
+
+      <!-- Activity Card -->
+      <div class="activity-card">
+        <h3>Recent Activity</h3>
+        <ul class="activity-list">
+          <li>Checked soil temperature in Field A</li>
+          <li>Updated moisture sensor data</li>
+          <li>Uploaded new pH test results</li>
+          <li>Viewed weekly soil report</li>
+        </ul>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Optional JS: Edit Profile Modal -->
+  <script>
+    const editBtn = document.getElementById("editBtn");
+    editBtn?.addEventListener("click", ()=>alert("Edit Profile clicked!"));
+  </script>
+
+</body>
+</html>

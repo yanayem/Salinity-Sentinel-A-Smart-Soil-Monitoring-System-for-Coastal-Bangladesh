@@ -18,4 +18,8 @@ urlpatterns = [
     path('soil-types/', views.soil_type_page, name='soil_types'),
     path('temperature/', views.temperature, name='temperature'),
     path('about/', views.aboutpage, name='aboutpage'),
+    path('profile/', views.profilepage, name='profilepage'),
+    path('settings/', views.settingpage, name='settingpage'),
+    path('terms-privacy/', views.terms_privacy, name='terms_privacy'),
+    path('subscribe-newsletter/', views.subscribe_newsletter, name='subscribe_newsletter'),
 ]

@@ -1,32 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Soil Monitoring Dashboard</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css">
-
-  <!-- Chart.js -->
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 <body>
-
-  <!-- Sidebar Navigation -->
-  <nav class="sidebar">
-    <div class="sidebar-header">
-      Soil Monitor
-    </div>
-    <ul class="sidebar-menu">
-      <li><a href="#" class="active">Dashboard</a></li>
-      <li><a href="{% url 'soil_types' %}">Soil Types</a></li>
-      <li><a href="#">pH Levels</a></li>
-      <li><a href="#">Temperature</a></li>
-      <li><a href="#">Humidity</a></li>
-      <li><a href="#">Profile</a></li>
-      <li><a href="{% url 'logout' %}">Logout</a></li>
-    </ul>
-  </nav>
+  <!-- Sidebar Include -->
+  {% include 'sidebar.html' %}
 
   <!-- Main Content -->
   <main class="main-content">
@@ -71,16 +55,9 @@
     <!-- Graphs Section -->
     <section class="charts">
       <h2>Soil Monitoring Graphs (Last 7 Readings)</h2>
-
-      <div class="chart-container">
-        <canvas id="phChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <canvas id="temperatureChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <canvas id="humidityChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="phChart"></canvas></div>
+      <div class="chart-container"><canvas id="temperatureChart"></canvas></div>
+      <div class="chart-container"><canvas id="humidityChart"></canvas></div>
     </section>
   </main>
 

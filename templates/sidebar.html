@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soil Monitoring Dashboard</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+ <!-- sidebar.html -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    Soil Monitor
+  </div>
+
+  <ul class="sidebar-menu">
+    <li><a href="{% url 'dashboard' %}" class="active">Dashboard</a></li>
+   <!-- <li><a href="{% url 'soil_types' %}">Soil Types</a></li>-->
+    <li><a href="#">pH Levels</a></li>
+    <li><a href="#">Live Data</a></li>
+    <li><a href="#">Alerts</a></li>
+   <!-- <li><a href="#">Devices</a></li>-->
+    <li><a href="#">Soil Moisture</a></li>
+    <li><a href="#">Crop Advisor</a></li>
+    <li><a href="#">Temperature</a></li>
+    <li><a href="#">Humidity</a></li>
+    <li><a href="{% url 'settingpage' %}">Settings</a></li>
+    <li><a href="{% url 'profilepage' %}">Profile</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+  </ul>
+</nav>
+
+
+</body>
+</html>

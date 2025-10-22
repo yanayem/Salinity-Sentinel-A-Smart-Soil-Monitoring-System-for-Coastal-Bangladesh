@@ -42,3 +42,11 @@ class SoilData(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.soil_type.name if self.soil_type else 'N/A'}"
+
+
+class Newsletter(models.Model):
+    email = models.EmailField(unique=True)  # Prevent duplicate emails
+    subscribed_at = models.DateTimeField(auto_now_add=True)  # Auto timestamp
+
+    def __str__(self):
+        return self.email

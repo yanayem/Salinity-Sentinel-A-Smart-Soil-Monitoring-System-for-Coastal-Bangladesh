@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Soil Monitor</title>
+  <link rel="stylesheet" href="/static/css/settings.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  {% include 'sidebar.html' %}
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="settings-container">
+
+      <h1>Settings</h1>
+
+      <!-- Profile Info Card -->
+      <div class="settings-card">
+        <h3>Profile Information</h3>
+        <div class="setting-row">
+          <label>Full Name:</label>
+          <span>{{ user.first_name }} {{ user.last_name }}</span>
+        </div>
+        <div class="setting-row">
+          <label>Email:</label>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="setting-row">
+          <label>Phone:</label>
+          <span>{{ profile.phone_number|default:"Not added" }}</span>
+        </div>
+        <div class="setting-row">
+          <label>Location:</label>
+          <span>{{ profile.location|default:"Not added" }}</span>
+        </div>
+      </div>
+
+      <!-- Alerts Card -->
+      <div class="settings-card">
+        <h3>Alerts & Notifications</h3>
+        <div class="setting-row">
+          <label>Soil Moisture Alerts</label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <label>pH Level Alerts</label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <label>Temperature Alerts</label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Devices Card -->
+      <div class="settings-card">
+        <h3>Connected Devices</h3>
+        <ul class="device-list">
+          <li>Device 1 - Field A <button class="btn action-btn">Remove</button></li>
+          <li>Device 2 - Field B <button class="btn action-btn">Remove</button></li>
+          <li>Device 3 - Greenhouse 1 <button class="btn action-btn">Remove</button></li>
+        </ul>
+      </div>
+
+      <button class="btn save-btn">Save Changes</button>
+
+    </section>
+  </main>
+
+</body>
+</html>
