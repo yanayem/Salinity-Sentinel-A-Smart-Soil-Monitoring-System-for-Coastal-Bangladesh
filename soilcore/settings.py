@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'soilcore', 
+    'weather',
 ]
 
 MIDDLEWARE = [
@@ -141,5 +142,20 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [BASE_DIR, "static"]
+
+
+# ============ WEATHER CONFIG ============
+OPENWEATHER_API_KEY = "963804a07802e5371e2a2bd19f6a7afb"  # 🔑 Replace with your key
+WEATHER_CACHE_SECONDS = 900  # 15 minutes
+
+
+#
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'soilmonitor2025@gmail.com'  # example
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'soilmonitor2025@gmail.com'
+EMAIL_HOST_PASSWORD = 'iekb dktq cfcl gnxc'
+
 
 

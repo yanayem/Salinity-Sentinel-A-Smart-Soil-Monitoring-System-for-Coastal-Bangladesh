@@ -5,7 +5,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings | Soil Monitor</title>
-  <link rel="stylesheet" href="/static/css/settings.css">
+  <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+  <style>
+    .edit-icon {
+      float: right;
+      cursor: pointer;
+      font-size: 18px;
+      color: #007bff;
+    }
+
+    .edit-input {
+      display: none;
+      width: 60%;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .setting-row span {
+      display: inline-block;
+    }
+
+    .save-profile-btn {
+      display: none;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .save-profile-btn:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
 
@@ -20,23 +55,37 @@
 
       <!-- Profile Info Card -->
       <div class="settings-card">
-        <h3>Profile Information</h3>
-        <div class="setting-row">
-          <label>Full Name:</label>
-          <span>{{ user.first_name }} {{ user.last_name }}</span>
-        </div>
-        <div class="setting-row">
-          <label>Email:</label>
-          <span>{{ user.email }}</span>
-        </div>
-        <div class="setting-row">
-          <label>Phone:</label>
-          <span>{{ profile.phone_number|default:"Not added" }}</span>
-        </div>
-        <div class="setting-row">
-          <label>Location:</label>
-          <span>{{ profile.location|default:"Not added" }}</span>
-        </div>
+        <h3>
+          Profile Information
+          <i class="edit-icon" id="editProfile">✏️</i>
+        </h3>
+
+        <form method="POST" action="{% url 'settingpage' %}">
+  {% csrf_token %}
+  <div class="setting-row">
+    <label>Full Name:</label>
+    <input type="text" name="full_name" value="{{ user.first_name }} {{ user.last_name }}">
+  </div>
+  <div class="setting-row">
+    <label>Email:</label>
+    <input type="email" name="email" value="{{ user.email }}">
+  </div>
+  <div class="setting-row">
+    <label>Phone:</label>
+    <input type="text" name="phone_number" value="{{ profile.phone_number }}">
+  </div>
+  <div class="setting-row">
+    <label>Location:</label>
+    <input type="text" name="location" value="{{ profile.location }}">
+  </div>
+  <div class="setting-row">
+  <label>Role:</label>
+  <input type="text" name="role" value="{{ profile.role|default:'Soil Analyst' }}">
+</div>
+
+  <button type="submit" class="btn save-btn">Save</button>
+</form>
+
       </div>
 
       <!-- Alerts Card -->
@@ -79,6 +128,20 @@
 
     </section>
   </main>
+
+  <script>
+    document.getElementById('editProfile').addEventListener('click', () => {
+      const inputs = document.querySelectorAll('.edit-input');
+      const spans = document.querySelectorAll('.setting-row span');
+      const saveBtn = document.getElementById('saveProfileBtn');
+
+      inputs.forEach(i => i.style.display = 'inline-block');
+      spans.forEach(s => s.style.display = 'none');
+      saveBtn.style.display = 'inline-block';
+    });
+
+    
+  </script>
 
 </body>
 </html>

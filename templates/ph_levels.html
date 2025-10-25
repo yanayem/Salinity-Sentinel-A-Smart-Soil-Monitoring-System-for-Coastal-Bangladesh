@@ -1,0 +1,170 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pH Levels Monitor</title>
+  <link rel="stylesheet" href="{% static 'css/ph.css' %}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .hidden { display: none; }
+    .alert-box { padding: 10px; border-radius: 5px; margin: 10px 0; font-weight: bold; }
+    .warning { background-color: #fff3cd; color: #856404; }
+    .danger { background-color: #f8d7da; color: #721c24; }
+    .chart-card { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+{% include 'sidebar.html' %}
+
+<main class="ph-dashboard">
+  <section class="ph-container">
+    <header class="ph-header">
+      <h1>🌱 pH Levels Monitor</h1>
+      <p>Real-time soil acidity tracking (simulated)</p>
+    </header>
+
+    <!-- Device Selection -->
+    <div class="device-select-box">
+      <label for="device-select">Select Device:</label>
+      <select id="device-select">
+        <option value="1">Field A Sensor</option>
+        <option value="2">Field B Sensor</option>
+        <option value="3">Greenhouse 1</option>
+      </select>
+    </div>
+
+    <!-- Alert Box -->
+    <div id="alert-box" class="alert-box hidden"></div>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+      <h2>Live pH Chart</h2>
+      <div class="chart-card">
+        <canvas id="phChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-section">
+      <h2>Recent pH Readings</h2>
+      <table id="ph-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+// ======= Sample Devices =======
+const SAMPLE_READINGS = {
+  "1": [6.8, 6.9, 7.1, 6.7],
+  "2": [6.2, 6.4, 6.3, 6.5],
+  "3": [7.2, 7.1, 7.3, 7.4]
+};
+const PH_THRESHOLDS = { safe_min: 6.5, safe_max: 7.5 };
+
+let chart;
+let selectedDevice = "1";
+let readingsHistory = {};
+
+// ======= Chart Setup =======
+function setupChart(ctx) {
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'pH Value', data: [], borderColor: '#0a3d62', backgroundColor: 'rgba(10,61,98,0.1)', fill: true }] },
+    options: { responsive: true, scales: { x: { title: { display: true, text: 'Time' } }, y: { title: { display: true, text: 'pH Value' }, min: 0, max: 14 } } }
+  });
+}
+
+// ======= Generate Random pH Variation =======
+function simulateNewReading(lastValue) {
+  const variation = (Math.random() * 0.2 - 0.1); // ±0.1 random
+  let newValue = lastValue + variation;
+  newValue = Math.max(5.5, Math.min(8, newValue)); // keep in 5.5-8 range
+  return parseFloat(newValue.toFixed(2));
+}
+
+// ======= Update Chart and Table =======
+function updateChartAndTable(deviceId) {
+  const readings = readingsHistory[deviceId];
+  chart.data.labels = readings.map(r => r.timestamp.toLocaleTimeString());
+  chart.data.datasets[0].data = readings.map(r => r.value);
+  chart.update();
+
+  const tbody = document.querySelector('#ph-table tbody');
+  tbody.innerHTML = "";
+  readings.slice().reverse().forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.timestamp.toLocaleString()}</td><td>${r.value.toFixed(2)}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  if (readings.length > 0) {
+    showAlertIfNeeded(readings[readings.length - 1].value);
+  }
+}
+
+// ======= Alert Handler =======
+function showAlertIfNeeded(latestValue) {
+  const box = document.getElementById('alert-box');
+  if (latestValue < PH_THRESHOLDS.safe_min || latestValue > PH_THRESHOLDS.safe_max) {
+    box.classList.remove('hidden', 'warning', 'danger');
+    const level = latestValue < PH_THRESHOLDS.safe_min ? 'Low' : 'High';
+    box.classList.add(latestValue < PH_THRESHOLDS.safe_min - 0.5 || latestValue > PH_THRESHOLDS.safe_max + 0.5 ? 'danger' : 'warning');
+    box.innerHTML = `⚠️ <strong>${level} pH Alert!</strong> Safe Range: ${PH_THRESHOLDS.safe_min} - ${PH_THRESHOLDS.safe_max}, Current: ${latestValue.toFixed(2)}`;
+  } else {
+    box.classList.add('hidden');
+  }
+}
+
+// ======= Initialize Readings History =======
+function initReadings() {
+  for (const deviceId in SAMPLE_READINGS) {
+    readingsHistory[deviceId] = SAMPLE_READINGS[deviceId].map(v => ({
+      value: v,
+      timestamp: new Date(new Date() - (SAMPLE_READINGS[deviceId].length - SAMPLE_READINGS[deviceId].indexOf(v)) * 5 * 60000) // 5-min intervals
+    }));
+  }
+}
+
+// ======= Add New Simulated Reading =======
+function addSimulatedReading(deviceId) {
+  const last = readingsHistory[deviceId][readingsHistory[deviceId].length - 1].value;
+  const newValue = simulateNewReading(last);
+  readingsHistory[deviceId].push({ value: newValue, timestamp: new Date() });
+  if (readingsHistory[deviceId].length > 20) readingsHistory[deviceId].shift(); // keep last 20
+}
+
+// ======= Main =======
+document.addEventListener("DOMContentLoaded", () => {
+  const ctx = document.getElementById('phChart').getContext('2d');
+  setupChart(ctx);
+  initReadings();
+  updateChartAndTable(selectedDevice);
+
+  const sel = document.getElementById('device-select');
+  sel.addEventListener('change', () => {
+    selectedDevice = sel.value;
+    updateChartAndTable(selectedDevice);
+  });
+
+  // Auto-update every 5 seconds
+  setInterval(() => {
+    addSimulatedReading(selectedDevice);
+    updateChartAndTable(selectedDevice);
+  }, 5000);
+});
+</script>
+
+</body>
+</html>

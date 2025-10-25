@@ -1,0 +1,93 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/ph.css' %}">
+
+<div class="main-content" style="margin-left: 260px; padding: 20px;">
+    <h1>🌿 Soil Moisture Dashboard</h1>
+
+    {% if devices %}
+    <div class="devices-cards" style="display:flex; gap:20px; flex-wrap:wrap;">
+        {% for device in devices %}
+        <div class="device-card" style="border:1px solid #ccc; padding:15px; border-radius:10px; width:250px; background:#fff;">
+            <h3>{{ device.name|default:"Device {{ forloop.counter }}" }}</h3>
+            {% with latest=latest_data|get_item:device.id %}
+            {% if latest %}
+                <p><strong>Soil Moisture:</strong> {{ latest.humidity|default:"60" }}%</p>
+                <p><strong>pH Level:</strong> {{ latest.ph_level|default:"6.8" }}</p>
+                <p><strong>Temperature:</strong> {{ latest.temperature|default:"25" }} °C</p>
+                <p><strong>Last Updated:</strong> {{ latest.updated_at|date:"H:i d-m-Y"|default:"10:30 01-01-2025" }}</p>
+            {% else %}
+                <p>No latest data</p>
+            {% endif %}
+            {% endwith %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No devices found for this user.</p>
+    {% endif %}
+
+    <h2 style="margin-top:30px;">Last 10 Readings Table</h2>
+    <table style="width:100%; border-collapse: collapse; margin-top:10px;">
+        <thead>
+            <tr>
+                <th>Device</th>
+                <th>Soil Moisture (%)</th>
+                <th>pH Level</th>
+                <th>Temperature</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_readings %}
+            {% for reading in recent_readings %}
+            <tr>
+                <td>{{ reading.device.name|default:"Sample Device" }}</td>
+                <td>{{ reading.humidity|default:"60" }}</td>
+                <td>{{ reading.ph_level|default:"6.8" }}</td>
+                <td>{{ reading.temperature|default:"25" }}</td>
+                <td>{{ reading.updated_at|date:"H:i d-m-Y"|default:"10:30 01-01-2025" }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr><td colspan="5">No readings found.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <!-- Sample chart -->
+    <h2 style="margin-top:30px;">Soil Moisture Chart</h2>
+    <canvas id="moistureChart" style="background:#fff; border-radius:10px; padding:15px;"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('moistureChart').getContext('2d');
+const moistureChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Soil Moisture (%)',
+            data: {{ chart_values|safe }},
+            borderColor: '#1e90ff',
+            backgroundColor: 'rgba(30,144,255,0.1)',
+            fill:true,
+            tension:0.3,
+            borderWidth:2,
+            pointRadius:4
+        }]
+    },
+    options: {
+        responsive:true,
+        scales: {
+            y: { beginAtZero:true, max:100, title:{display:true, text:'Moisture (%)'} },
+            x: { title:{display:true, text:'Time'} }
+        }
+    }
+});
+</script>
+{% endblock %}

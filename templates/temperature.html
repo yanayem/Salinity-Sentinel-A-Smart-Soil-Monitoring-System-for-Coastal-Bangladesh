@@ -1,160 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WeatherApp</title>
-    <link rel="stylesheet" href="/static/css/temp.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  </head>
-  <body>
-    <!-- Main Nav -->
-    <nav>
-      <div class="nav-container">
-        <div class="nav-logo">WeaTherApp</div>
-        <ul class="nav-links">
-          <li><a href="#temperature">Temperature</a></li>
-          <li><a href="#forecast">Forecast</a></li>
-          <li><a href="#settings">Settings</a></li>
-        </ul>
-        <div class="hamburger" id="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </nav>
-    <!-- Include additional nav if needed -->
-    {% include "nav.html" %}
+{% load static %}
+ {% include 'sidebar.html' %}
 
-    <div class="container">
-      <div class="card fade-in">
-        <div class="card-body">
-          <h4>Please Allow Browser Location Access</h4>
-          <p class="subtitle">We'll use it to fetch accurate weather data.</p>
-        </div>
-      </div>
+{% block content %}
+<div class="container" style="padding: 20px;">
+    <h1>🌡 Temperature & Crop Advisor Dashboard</h1>
 
-      <div class="card fade-in" id="temperature">
-        <h5 class="card-header">Temperature</h5>
-        <div class="card-body">
-          <form method="POST">
-            {% csrf_token %}
-            <div class="form-row">
-              <input
-                name="latitude"
-                id="latitude"
-                required
-                type="text"
-                placeholder="Enter Latitude"
-              />
-              <input
-                name="longitude"
-                id="longitude"
-                required
-                type="text"
-                placeholder="Enter Longitude"
-              />
-            </div>
-            <button type="submit" class="btn-primary">Show Temperature</button>
-          </form>
-        </div>
-      </div>
+    <!-- Device Cards -->
+    <div class="devices-cards" id="device-cards" style="display: flex; flex-wrap: wrap; gap: 20px;"></div>
+</div>
 
-      {% if temp %}
-      <div class="card fade-in" id="temp-card">
-        <div class="card-body">
-          <div class="temp-display" id="temp-display">
-            Currently <strong>{{ temp }}&deg; Celsius</strong>
-          </div>
-        </div>
-      </div>
+<style>
+    body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+}
 
-      <!-- More Information Section -->
-      <div class="more-info-section slide-in">
-        <h3 class="section-title">More Information</h3>
-        <div class="info-grid">
-          <!-- Air Quality -->
-          <div class="info-card">
-            <div class="info-icon"><i class="fas fa-wind"></i></div>
-            <h6>Air Quality</h6>
-            <p class="info-value">{{ aqi|default:"Good" }} (AQI: {{ aqi_value|default:"25" }})</p>
-            <p class="info-desc">Air is clean and safe for outdoor activities.</p>
-          </div>
-          <!-- Road Conditions -->
-          <div class="info-card">
-            <div class="info-icon"><i class="fas fa-road"></i></div>
-            <h6>Road Conditions</h6>
-            <p class="info-value">{{ road_condition|default:"Clear" }}</p>
-            <p class="info-desc">Roads are dry and traffic is flowing smoothly.</p>
-          </div>
-          <!-- Weather Analysis -->
-          <div class="info-card">
-            <div class="info-icon"><i class="fas fa-chart-line"></i></div>
-            <h6>Weather Analysis</h6>
-            <p class="info-value">Humidity: {{ humidity|default:"60" }}% | Wind: {{ wind_speed|default:"10" }} km/h</p>
-            <p class="info-desc">Expect mild weather with possible showers later.</p>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-    </div>
+.container {
+    margin-left: 250px; /* adjust to sidebar width */
+    padding: 20px;
+}
+.device-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 12px;
+    width: 250px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s;
+}
+.device-card:hover { transform: scale(1.05); }
+.temp-normal { background-color: #d4edda; }   /* green */
+.temp-high { background-color: #f8d7da; }     /* red */
+.temp-low { background-color: #cce5ff; }      /* blue */
+.device-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; }
+.temp-value { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
+.timestamp { font-size: 0.85rem; color: #555; margin-bottom: 10px; }
+.suggestion { font-size: 0.9rem; font-weight: 500; }
+.region { font-size: 0.85rem; color: #333; margin-top: 5px; }
+</style>
 
-    <!-- Animated background elements for weather feel -->
-    <div class="background-elements">
-      <div class="cloud cloud1"></div>
-      <div class="cloud cloud2"></div>
-      <div class="cloud cloud3"></div>
-    </div>
+<script>
+// ===== SAMPLE DEVICES & TEMPERATURES =====
+const devices = [
+    {id:1, name:"Device 1", region:"North Bangladesh", soilType:"Loamy"},
+    {id:2, name:"Device 2", region:"Central Bangladesh", soilType:"Clay"},
+    {id:3, name:"Device 3", region:"South Bangladesh", soilType:"Sandy"}
+];
 
-    <script>
-      const latitude = document.getElementById("latitude");
-      const longitude = document.getElementById("longitude");
+let latestReadings = [
+    {deviceId:1, temperature:28, updated_at:"10:30 25-10-2025"},
+    {deviceId:2, temperature:35, updated_at:"10:32 25-10-2025"},
+    {deviceId:3, temperature:20, updated_at:"10:35 25-10-2025"}
+];
 
-      function getLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            latitude.value = position.coords.latitude;
-            longitude.value = position.coords.longitude;
-          });
-        } else {
-          alert("Geolocation is not supported by your browser");
-        }
-      }
+// ===== SUGGESTION FUNCTION BASED ON TEMP =====
+function suggestCrop(temp) {
+    if(temp > 32) return "Plant heat-tolerant crops or mango trees 🌳";
+    if(temp < 22) return "Plant cool-weather crops or guava trees 🍐";
+    return "Optimal for vegetables and fruit trees 🌱";
+}
 
-      getLocation();
+// ===== RENDER DEVICE CARDS =====
+function renderCards() {
+    const container = document.getElementById("device-cards");
+    container.innerHTML = "";
+    devices.forEach(device => {
+        const latest = latestReadings.find(r => r.deviceId===device.id);
+        let tempClass = "temp-normal";
+        if(latest.temperature > 32) tempClass="temp-high";
+        else if(latest.temperature < 22) tempClass="temp-low";
 
-      // Dynamic background based on temperature
-      function updateBackground() {
-        const tempDisplay = document.getElementById("temp-display");
-        if (tempDisplay) {
-          const tempText = tempDisplay.textContent;
-          const tempMatch = tempText.match(/(\d+)/); // Extract number from "Currently X°Celsius"
-          if (tempMatch) {
-            const temp = parseInt(tempMatch[1]);
-            const body = document.body;
-            if (temp > 25) {
-              body.style.background = "linear-gradient(135deg, #ff7e5f, #feb47b)"; // Warm/hot
-            } else if (temp >= 10) {
-              body.style.background = "linear-gradient(135deg, #74b9ff, #a8e6cf)";
-            } else {
-              body.style.background = "linear-gradient(135deg, #667eea, #ffffff)"; 
-            }
-          }
-        } else {
-          document.body.style.background = "linear-gradient(135deg, #87ceeb, #e0f6ff)"; 
-        }
-      }
+        const card = document.createElement("div");
+        card.className = `device-card ${tempClass}`;
+        card.innerHTML = `
+            <div class="device-name">${device.name}</div>
+            <div class="temp-value">${latest.temperature}°C</div>
+            <div class="region">${device.region} | ${device.soilType} soil</div>
+            <div class="suggestion">${suggestCrop(latest.temperature)}</div>
+            <div class="timestamp">Last updated: ${latest.updated_at}</div>
+        `;
+        container.appendChild(card);
+    });
+}
 
-      // Run on page load and after any dynamic content
-      window.addEventListener("load", updateBackground);
+// ===== INITIAL RENDER =====
+renderCards();
 
-      // Hamburger menu toggle for mobile nav
-      const hamburger = document.getElementById("hamburger");
-      const navLinks = document.querySelector(".nav-links");
-      hamburger.addEventListener("click", () => {
-        navLinks.classList.toggle("active");
-      });
-    </script>
-  </body>
-</html>
+// ===== SIMULATE LIVE UPDATES =====
+setInterval(()=>{
+    latestReadings = latestReadings.map(r=>({
+        ...r,
+        temperature: r.temperature + Math.floor(Math.random()*3-1),
+        updated_at: new Date().toLocaleTimeString() + " " + new Date().toLocaleDateString()
+    }));
+    renderCards();
+},10000);
+</script>
+
+{% endblock %}

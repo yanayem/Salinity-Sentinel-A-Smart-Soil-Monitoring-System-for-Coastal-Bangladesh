@@ -1,41 +1,172 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soil Monitoring Dashboard</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soil Monitoring Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <style>
+      /* Sidebar styling */
+      .sidebar {
+        width: 250px;
+        height: 100vh;
+        background-color: #1a1a2e;
+        color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+        transition: width 0.3s;
+        font-family: 'Poppins', sans-serif;
+      }
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      .sidebar-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px 0;
+        background-color: #162447;
+      }
 
-</head>
-<body>
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
 
- <!-- sidebar.html -->
-<nav class="sidebar">
-  <div class="sidebar-header">
-    Soil Monitor
-  </div>
+      .sidebar-menu li {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-  <ul class="sidebar-menu">
-    <li><a href="{% url 'dashboard' %}" class="active">Dashboard</a></li>
-   <!-- <li><a href="{% url 'soil_types' %}">Soil Types</a></li>-->
-    <li><a href="#">pH Levels</a></li>
-    <li><a href="#">Live Data</a></li>
-    <li><a href="#">Alerts</a></li>
-   <!-- <li><a href="#">Devices</a></li>-->
-    <li><a href="#">Soil Moisture</a></li>
-    <li><a href="#">Crop Advisor</a></li>
-    <li><a href="#">Temperature</a></li>
-    <li><a href="#">Humidity</a></li>
-    <li><a href="{% url 'settingpage' %}">Settings</a></li>
-    <li><a href="{% url 'profilepage' %}">Profile</a></li>
-    <li><a href="{% url 'logout' %}">Logout</a></li>
-  </ul>
-</nav>
+      .sidebar-menu a {
+        display: block;
+        padding: 12px 20px;
+        color: #fff;
+        text-decoration: none;
+        transition: 0.2s;
+      }
 
+      .sidebar-menu a:hover {
+        background-color: #0f3460;
+      }
 
-</body>
+      .sidebar-menu .active > a {
+        background-color: #e94560;
+        font-weight: bold;
+      }
+
+      /* Group headers */
+      .sidebar-group > span {
+        display: block;
+        padding: 12px 20px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #0f3460;
+      }
+
+      /* Nested menu */
+      .sidebar-group ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+      }
+
+      .sidebar-group ul li a {
+        padding-left: 40px;
+        background-color: #162447;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 60px;
+        }
+        .sidebar-menu a,
+        .sidebar-group > span {
+          padding: 12px 10px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="sidebar">
+      <div class="sidebar-header">Soil Monitor</div>
+
+      <ul class="sidebar-menu">
+        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+          <a href="{% url 'dashboard' %}">Dashboard</a>
+        </li>
+
+        <!-- Sensors group -->
+        <li class="sidebar-group">
+          <span onclick="toggleGroup(this)">Sensors ▾</span>
+          <ul>
+            <li class="{% if request.resolver_match.url_name == 'ph-levels' %}active{% endif %}">
+              <a href="{% url 'ph_levels' %}">pH Levels</a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'soil-moisture' %}active{% endif %}">
+              <a href="{% url 'soil_moisture' %}">Soil Moisture</a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'temperaturepage' %}active{% endif %}">
+              <a href="{% url 'temperaturepage' %}">Temperature</a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'humidity_page' %}active{% endif %}">
+              <a href="{% url 'humidity_page' %}">Humidity</a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="{% if request.resolver_match.url_name == 'live_data' %}active{% endif %}">
+          <a href="{% url 'live_data' %}">Live Data</a>
+        </li>
+
+        <li class="{% if request.resolver_match.url_name == 'alerts_page' %}active{% endif %}">
+          <a href="{% url 'alerts_page' %}">Alerts</a>
+        </li>
+
+        <li class="{% if request.resolver_match.url_name == 'crop_advisor' %}active{% endif %}">
+          <a href="{% url 'crop_advisor' %}">Crop Advisor</a>
+        </li>
+
+        <li class="{% if request.resolver_match.url_name == 'settingpage' %}active{% endif %}">
+          <a href="{% url 'settingpage' %}">Settings</a>
+        </li>
+
+        <li class="{% if request.resolver_match.url_name == 'profilepage' %}active{% endif %}">
+          <a href="{% url 'profilepage' %}">Profile</a>
+        </li>
+
+        <li>
+          <a href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+    </nav>
+
+    <script>
+      // JS to toggle sensor group
+      function toggleGroup(el) {
+        const ul = el.nextElementSibling;
+        if (ul.style.display === "block") {
+          ul.style.display = "none";
+          el.innerText = el.innerText.replace('▴', '▾');
+        } else {
+          ul.style.display = "block";
+          el.innerText = el.innerText.replace('▾', '▴');
+        }
+      }
+
+      // Auto-expand group if active link is inside
+      document.querySelectorAll('.sidebar-group').forEach(group => {
+        const activeLink = group.querySelector('.active');
+        if (activeLink) {
+          group.querySelector('ul').style.display = 'block';
+          const span = group.querySelector('span');
+          span.innerText = span.innerText.replace('▾', '▴');
+        }
+      });
+    </script>
+  </body>
 </html>

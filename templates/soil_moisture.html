@@ -1,0 +1,104 @@
+
+{% load static %}
+
+{% block content %}
+{% include 'sidebar.html' %}
+
+<div class="main" style="margin-left:270px; padding:20px;">
+    <h1>🌿 Soil Moisture Dashboard</h1>
+
+    <div class="devices-cards" id="deviceCards" style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom:30px;"></div>
+
+    <h2>Last 10 Readings Table</h2>
+    <table id="readingTable" style="width:100%; border-collapse:collapse; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:30px;">
+        <thead>
+            <tr>
+                <th style="border:1px solid #ccc; padding:8px;">Device</th>
+                <th style="border:1px solid #ccc; padding:8px;">Soil Moisture (%)</th>
+                <th style="border:1px solid #ccc; padding:8px;">pH Level</th>
+                <th style="border:1px solid #ccc; padding:8px;">Temperature</th>
+                <th style="border:1px solid #ccc; padding:8px;">Timestamp</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Soil Moisture Chart</h2>
+    <canvas id="moistureChart" style="width:100%; max-width:800px; height:300px;"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const devices = [
+    { name: "Device 1", location: "Field A" },
+    { name: "Device 2", location: "Field B" },
+    { name: "Device 3", location: "Field C" },
+    { name: "Device 4", location: "Field D" },
+    { name: "Device 5", location: "Field E" },
+];
+
+let readings = [];
+
+function generateReading(device) {
+    const moisture = Math.floor(Math.random() * 20) + 60;
+    const ph = (Math.random() * 1.5 + 6.5).toFixed(1);
+    const temp = Math.floor(Math.random() * 5) + 24;
+    const timestamp = new Date();
+    return { device: device.name, moisture, ph, temp, timestamp };
+}
+
+function renderDeviceCards() {
+    const container = document.getElementById("deviceCards");
+    container.innerHTML = "";
+    devices.forEach(device => {
+        const latest = readings.filter(r => r.device === device.name).slice(-1)[0] || generateReading(device);
+        const card = document.createElement("div");
+        card.className = "device-card";
+        card.style = "border:1px solid #ccc; padding:15px; border-radius:10px; width:250px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1);";
+        card.innerHTML = `
+            <h3>${device.name}</h3>
+            <p><strong>Soil Moisture:</strong> ${latest.moisture}%</p>
+            <p><strong>pH Level:</strong> ${latest.ph}</p>
+            <p><strong>Temperature:</strong> ${latest.temp} °C</p>
+            <p><strong>Last Updated:</strong> ${latest.timestamp.toLocaleTimeString()}</p>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderTable() {
+    const tbody = document.querySelector("#readingTable tbody");
+    tbody.innerHTML = "";
+    const last10 = readings.slice(-10).reverse();
+    last10.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${r.device}</td>
+            <td>${r.moisture}</td>
+            <td>${r.ph}</td>
+            <td>${r.temp}</td>
+            <td>${r.timestamp.toLocaleTimeString()}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+const ctx = document.getElementById('moistureChart').getContext('2d');
+const chartData = { labels: [], datasets: [{ label:'Soil Moisture (%)', data:[], borderColor:'#1e90ff', backgroundColor:'rgba(30,144,255,0.1)', fill:true, tension:0.3, borderWidth:2, pointRadius:4 }]};
+const moistureChart = new Chart(ctx, { type:'line', data:chartData, options:{ responsive:true, scales:{ y:{beginAtZero:true, max:100, title:{display:true,text:'Moisture (%)'}}, x:{title:{display:true,text:'Time'}} } } });
+
+function updateDashboard() {
+    devices.forEach(device => readings.push(generateReading(device)));
+    if (readings.length > 50) readings = readings.slice(-50);
+    renderDeviceCards();
+    renderTable();
+    const firstDeviceReadings = readings.filter(r=>r.device===devices[0].name).slice(-10);
+    chartData.labels = firstDeviceReadings.map(r=>r.timestamp.toLocaleTimeString());
+    chartData.datasets[0].data = firstDeviceReadings.map(r=>r.moisture);
+    moistureChart.update();
+}
+
+updateDashboard();
+setInterval(updateDashboard, 3000);
+</script>
+{% endblock %}

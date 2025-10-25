@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Soil Data</title>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<style>
+  .main-content { margin-left: 250px; padding: 20px; width: calc(100% - 250px); }
+  h1 { color:#333; margin-bottom:20px; }
+  table { width:100%; border-collapse: collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+  th, td { padding:12px; text-align:center; border-bottom:1px solid #ddd; }
+  th { background:#0a3d62; color:#fff; font-weight:600; }
+  tr:nth-child(even) { background:#f9f9f9; }
+  .alert-high { background-color: #ffcccc; }
+  .alert-low { background-color: #cce5ff; }
+  .status { font-weight: bold; }
+</style>
+</head>
+<body>
+
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+  <h1>🌿 Live Soil Data</h1>
+
+  <table id="live-table">
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>pH Value</th>
+        <th>Soil Moisture</th>
+        <th>Temperature</th>
+        <th>Status</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Sample data rows -->
+      <tr>
+        <td>Field Sensor A</td>
+        <td>6.8</td>
+        <td>62%</td>
+        <td>25°C</td>
+        <td class="status">Normal</td>
+        <td>10:30:25</td>
+      </tr>
+      <tr>
+        <td>Field Sensor A</td>
+        <td>6.5</td>
+        <td>64%</td>
+        <td>26°C</td>
+        <td class="status alert-low">Low pH</td>
+        <td>10:25:25</td>
+      </tr>
+      <tr>
+        <td>Field Sensor A</td>
+        <td>7.2</td>
+        <td>60%</td>
+        <td>25°C</td>
+        <td class="status">Normal</td>
+        <td>10:20:25</td>
+      </tr>
+      <tr>
+        <td>Field Sensor A</td>
+        <td>7.8</td>
+        <td>63%</td>
+        <td>26°C</td>
+        <td class="status alert-high">High pH</td>
+        <td>10:15:25</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Optional JS: simulate live updates -->
+<script>
+  // Sample auto-update simulation
+  const sampleReadings = [
+    {ph:6.9, moisture:63, temp:25, status:'Normal', time:'10:35:25'},
+    {ph:6.4, moisture:65, temp:26, status:'Low pH', time:'10:40:25'},
+    {ph:7.1, moisture:61, temp:25, status:'Normal', time:'10:45:25'},
+    {ph:7.9, moisture:64, temp:26, status:'High pH', time:'10:50:25'}
+  ];
+
+  const tbody = document.querySelector("#live-table tbody");
+
+  let idx = 0;
+  setInterval(() => {
+    const reading = sampleReadings[idx % sampleReadings.length];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>Field Sensor A</td>
+      <td>${reading.ph}</td>
+      <td>${reading.moisture}%</td>
+      <td>${reading.temp}°C</td>
+      <td class="status ${reading.status==='Low pH'?'alert-low':reading.status==='High pH'?'alert-high':''}">${reading.status}</td>
+      <td>${reading.time}</td>
+    `;
+    tbody.prepend(tr);
+    if(tbody.rows.length > 10) tbody.deleteRow(-1); // keep last 10 readings
+    idx++;
+  }, 5000); // add new reading every 5 sec
+</script>
+
+</body>
+</html>

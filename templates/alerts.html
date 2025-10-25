@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Alerts</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <style>
+    .main-content { margin-left: 250px; padding: 20px; }
+    table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+    th, td { padding:12px; text-align:center; border-bottom:1px solid #ddd; }
+    th { background:#0a3d62; color:#fff; font-weight:600; }
+    tr:nth-child(even) { background:#f9f9f9; }
+    .high-alert { background:#ffcccc !important; animation: blink 1.5s infinite;}
+    .low-alert { background:#cce5ff !important; }
+    @keyframes blink { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0.5;} }
+    .no-alerts { text-align:center; font-style:italic; color:#666; }
+  </style>
+</head>
+<body>
+
+  {% include 'sidebar.html' %}
+
+  <div class="main-content">
+    <h1>Device Alerts</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Device</th>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Type</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="alerts-body">
+        <!-- Sample alerts will be inserted here by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Sample data
+    const sampleAlerts = [
+      {device_name: "Device 1", parameter: "Soil Moisture", value: 85, threshold_type: "high", timestamp: "12:10 25-10-2025"},
+      {device_name: "Device 2", parameter: "pH Level", value: 5.8, threshold_type: "low", timestamp: "12:12 25-10-2025"},
+      {device_name: "Device 3", parameter: "Temperature", value: 30, threshold_type: "high", timestamp: "12:15 25-10-2025"},
+      {device_name: "Device 4", parameter: "Soil Moisture", value: 60, threshold_type: "low", timestamp: "12:20 25-10-2025"},
+    ];
+
+    const tbody = document.getElementById('alerts-body');
+    if (sampleAlerts.length > 0) {
+      sampleAlerts.forEach(alert => {
+        const tr = document.createElement('tr');
+        tr.className = alert.threshold_type === 'high' ? 'high-alert' : 'low-alert';
+        tr.innerHTML = `
+          <td>${alert.device_name}</td>
+          <td>${alert.parameter}</td>
+          <td>${alert.value}</td>
+          <td>${alert.threshold_type.charAt(0).toUpperCase() + alert.threshold_type.slice(1)}</td>
+          <td>${alert.timestamp}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } else {
+      tbody.innerHTML = '<tr><td colspan="5" class="no-alerts">No alerts found</td></tr>';
+    }
+  </script>
+
+</body>
+</html>

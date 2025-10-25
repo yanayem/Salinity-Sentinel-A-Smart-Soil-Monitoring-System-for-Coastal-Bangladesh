@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Soil Crop & Tree Advisor</title>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<style>
+  body { font-family: Arial, sans-serif; background:#f7f9fc; margin:0; padding:0; }
+  .main-content { margin-left:250px; padding:20px; }
+  h1 { color:#1e3d59; margin-bottom:20px; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+  th, td { padding:12px; text-align:center; border-bottom:1px solid #ddd; }
+  th { background:#0a3d62; color:#fff; cursor:pointer; }
+  tr:nth-child(even) { background:#f9f9f9; }
+  .alert { background:#ffcccc; }
+  .normal { background:#ccffcc; }
+  .device-card { border:1px solid #ccc; padding:15px; border-radius:10px; width:240px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin:10px; display:inline-block; vertical-align:top; }
+</style>
+</head>
+<body>
+
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+  <h1>🌱 AI Soil Crop & Tree Advisor</h1>
+  
+  <!-- Device Cards -->
+  <div id="device-cards">
+    <!-- Cards injected by JS -->
+  </div>
+
+  <h2>Device Soil Data Analysis</h2>
+  <table id="analysis-table">
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>Location</th>
+        <th>Region</th>
+        <th>Soil Type</th>
+        <th>pH</th>
+        <th>Moisture (%)</th>
+        <th>Temp (°C)</th>
+        <th>Recommended Crops</th>
+        <th>Recommended Trees</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows injected by JS -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+// ========== SAMPLE DEVICE DATA ==========
+const devices = [
+  {id:1, name:"Device 1", location:"Dhaka, Bangladesh", soil:"Loamy", ph:6.5, moisture:70, temp:28},
+  {id:2, name:"Device 2", location:"Nairobi, Kenya", soil:"Sandy", ph:5.8, moisture:60, temp:25},
+  {id:3, name:"Device 3", location:"Rio de Janeiro, Brazil", soil:"Clay", ph:7.2, moisture:80, temp:30},
+  {id:4, name:"Device 4", location:"Mumbai, India", soil:"Silty", ph:7.8, moisture:50, temp:32},
+];
+
+// ========== REGION MAPPING ==========
+function getRegion(location) {
+  location = location.toLowerCase();
+  if(location.includes("bangladesh") || location.includes("india")) return "Asia";
+  if(location.includes("kenya")) return "Africa";
+  if(location.includes("brazil")) return "South America";
+  return "Other";
+}
+
+// ========== AI-STYLE CROP & TREE RECOMMENDATION ==========
+function recommendCropsTrees(device) {
+  let crops = [];
+  let trees = [];
+
+  // pH based recommendations
+  if(device.ph < 6){
+    crops = ["Potato", "Tomato"];
+    trees = ["Mango", "Guava"];
+  } else if(device.ph >=6 && device.ph <=7.0){
+    crops = ["Rice", "Wheat"];
+    trees = ["Orange", "Lemon"];
+  } else if(device.ph >7.0 && device.ph <=7.5){
+    crops = ["Barley", "Sugarcane"];
+    trees = ["Olive", "Peach"];
+  } else {
+    crops = ["Beetroot", "Alfalfa"];
+    trees = ["Apple", "Pear"];
+  }
+
+  // Soil type adjustment
+  if(device.soil.toLowerCase().includes("sandy")) crops.push("Carrot");
+  if(device.soil.toLowerCase().includes("clay")) crops.push("Rice");
+
+  // Moisture adjustment
+  if(device.moisture < 50) crops.push("Drought-resistant crops");
+  if(device.moisture > 80) crops.push("Water-loving crops");
+
+  // Location-based enhancement
+  if(device.location.toLowerCase().includes("bangladesh")) {
+    crops.push("Jackfruit");
+    trees.push("Bamboo");
+  } else if(device.location.toLowerCase().includes("kenya")) {
+    crops.push("Maize");
+    trees.push("Avocado");
+  } else if(device.location.toLowerCase().includes("brazil")) {
+    crops.push("Cassava");
+    trees.push("Mango");
+  }
+
+  return {crops, trees};
+}
+
+// ========== RENDER DEVICE CARDS ==========
+function renderCards() {
+  const container = document.getElementById("device-cards");
+  container.innerHTML = "";
+  devices.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "device-card";
+    const rec = recommendCropsTrees(d);
+    const region = getRegion(d.location);
+    card.innerHTML = `
+      <h3>${d.name}</h3>
+      <p><strong>Location:</strong> ${d.location}</p>
+      <p><strong>Region:</strong> ${region}</p>
+      <p><strong>Soil Type:</strong> ${d.soil}</p>
+      <p><strong>pH:</strong> ${d.ph}</p>
+      <p><strong>Moisture:</strong> ${d.moisture}%</p>
+      <p><strong>Temp:</strong> ${d.temp} °C</p>
+      <p><strong>Recommended Crops:</strong> ${rec.crops.join(", ")}</p>
+      <p><strong>Recommended Trees:</strong> ${rec.trees.join(", ")}</p>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ========== RENDER TABLE ==========
+function renderTable() {
+  const tbody = document.querySelector("#analysis-table tbody");
+  tbody.innerHTML = "";
+  devices.forEach(d => {
+    const rec = recommendCropsTrees(d);
+    const region = getRegion(d.location);
+    const tr = document.createElement("tr");
+    tr.className = (d.ph <6 || d.ph>7.5) ? "alert" : "normal";
+    tr.innerHTML = `
+      <td>${d.name}</td>
+      <td>${d.location}</td>
+      <td>${region}</td>
+      <td>${d.soil}</td>
+      <td>${d.ph.toFixed(2)}</td>
+      <td>${d.moisture}</td>
+      <td>${d.temp}</td>
+      <td>${rec.crops.join(", ")}</td>
+      <td>${rec.trees.join(", ")}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ========== AUTO-UPDATE SIMULATION ==========
+function simulateDataUpdate() {
+  devices.forEach(d => {
+    // Slight random variation
+    d.ph += (Math.random()-0.5)*0.2;
+    d.moisture += Math.floor(Math.random()*3 -1);
+    d.temp += Math.floor(Math.random()*2 -1);
+  });
+  renderCards();
+  renderTable();
+}
+
+// Initial render
+renderCards();
+renderTable();
+// Update every 10 seconds
+setInterval(simulateDataUpdate, 10000);
+
+</script>
+</body>
+</html>

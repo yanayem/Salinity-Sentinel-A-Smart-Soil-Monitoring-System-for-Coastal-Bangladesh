@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SoilType, UserProfile, SoilData, Newsletter
+from .models import SoilType, UserProfile, SoilData, Newsletter, Device
 
 # -----------------------------------------------
 # SoilType Admin
@@ -11,12 +11,10 @@ class SoilTypeAdmin(admin.ModelAdmin):
     list_filter = ('location',)
     ordering = ('name',)
 
-    # Optional: Add a method to display pH range
     def ph_range(self, obj):
         if obj.ph_min is not None and obj.ph_max is not None:
             return f"{obj.ph_min} - {obj.ph_max}"
         return "N/A"
-    
     ph_range.short_description = "pH Range"
 
 
@@ -28,6 +26,15 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'phone_number', 'location')
     search_fields = ('user__username', 'user__email', 'phone_number', 'location')
     ordering = ('user__username',)
+
+
+# -----------------------------------------------
+# Device Admin
+# -----------------------------------------------
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'location', 'user')
+    search_fields = ('name', 'location', 'user__username')
 
 
 # -----------------------------------------------

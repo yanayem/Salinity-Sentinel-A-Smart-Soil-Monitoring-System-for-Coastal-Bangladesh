@@ -7,20 +7,33 @@
   <title>Soil Monitoring Dashboard</title>
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .main-content { margin-left: 250px; padding: 20px; }
+    .cards { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; }
+    .card { flex: 1 1 200px; border: 1px solid #ccc; padding: 15px; border-radius: 10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .profile-section { margin-bottom: 30px; }
+    .charts .chart-container { margin-bottom: 20px; width: 100%; height: 300px; }
+    .device-info { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius:10px; background:#f9f9f9; box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+  </style>
 </head>
 <body>
 
   {% include 'sidebar.html' %}
 
-  
   <main class="main-content">
     <header class="top-bar">
       <h1>Welcome, {{ user.first_name|default:user.username }}!</h1>
-      <form method="GET" action="{% url 'soil_types' %}" class="search-bar">
-        <input type="text" name="q" placeholder="Search soil types..." value="{{ query|default:'' }}">
-        <button type="submit">Search</button>
-      </form>
     </header>
+
+    <!-- Device Info -->
+    <section class="device-info">
+      <h2>Device Information</h2>
+      <ul>
+        <li><strong>Device Name:</strong> {{ device.name|default:"No device assigned" }}</li>
+        <li><strong>Device ID:</strong> {{ device.device_id|default:"N/A" }}</li>
+        <li><strong>Location:</strong> {{ device.location|default:"N/A" }}</li>
+      </ul>
+    </section>
 
     <!-- Soil Monitoring Cards -->
     <section class="cards">
@@ -46,6 +59,7 @@
     <section class="profile-section">
       <h2>Your Profile</h2>
       <ul>
+        <li><strong>Full Name:</strong> {{ user.get_full_name|default:user.username }}</li>
         <li><strong>Email:</strong> {{ user.email|default:"No email" }}</li>
         <li><strong>Phone:</strong> {{ profile.phone_number|default:"No phone" }}</li>
         <li><strong>Location:</strong> {{ profile.location|default:"No location" }}</li>
@@ -61,15 +75,20 @@
     </section>
   </main>
 
-  <!-- Chart.js Scripts -->
+  <!-- Chart.js Scripts with Sample Data -->
   <script>
+    const timestamps = ["10:00","10:10","10:20","10:30","10:40","10:50","11:00"];
+    const ph_values = [6.7, 6.8, 6.9, 6.8, 6.7, 6.9, 6.8];
+    const temp_values = [27, 28, 28, 28, 29, 28, 28];
+    const humidity_values = [64, 65, 66, 65, 64, 66, 65];
+
     const phChart = new Chart(document.getElementById('phChart').getContext('2d'), {
       type: 'line',
       data: {
-        labels: {{ timestamps|safe }},
+        labels: timestamps,
         datasets: [{
           label: 'pH Level',
-          data: {{ ph_values|safe }},
+          data: ph_values,
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           fill: true,
@@ -82,10 +101,10 @@
     const tempChart = new Chart(document.getElementById('temperatureChart').getContext('2d'), {
       type: 'line',
       data: {
-        labels: {{ timestamps|safe }},
+        labels: timestamps,
         datasets: [{
           label: 'Temperature (°C)',
-          data: {{ temp_values|safe }},
+          data: temp_values,
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           fill: true,
@@ -98,10 +117,10 @@
     const humidityChart = new Chart(document.getElementById('humidityChart').getContext('2d'), {
       type: 'line',
       data: {
-        labels: {{ timestamps|safe }},
+        labels: timestamps,
         datasets: [{
           label: 'Humidity (%)',
-          data: {{ humidity_values|safe }},
+          data: humidity_values,
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           fill: true,
