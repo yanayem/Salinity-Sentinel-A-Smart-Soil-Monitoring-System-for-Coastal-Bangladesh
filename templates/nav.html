@@ -47,8 +47,8 @@
           </ul>
 
           <div class="mobile_login_btn">
-            <a href="{% url 'login_signup' %}" class="btn primary">Login</a>
-            <a href="{% url 'login_signup' %}?mode=signup" class="btn secondary"
+            <a href="{% url 'login' %}" class="btn primary">Login</a>
+            <a href="{% url 'login' %}?mode=signup" class="btn secondary"
               >Sign Up</a
             >
           </div>
@@ -60,10 +60,10 @@
             <input type="text" placeholder="Search here..." />
           </div>
           <div class="login_btn">
-            <a href="{% url 'login_signup' %}?mode=login" class="btn primary"
+            <a href="{% url 'login' %}?mode=login" class="btn primary"
               >Login</a
             >
-            <a href="{% url 'login_signup' %}?mode=signup" class="btn secondary"
+            <a href="{% url 'login' %}?mode=signup" class="btn secondary"
               >Sign Up</a
             >
           </div>

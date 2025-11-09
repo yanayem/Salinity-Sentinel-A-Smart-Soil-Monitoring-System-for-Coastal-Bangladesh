@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devices Management | Soil Monitor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex">
+
+  {% include 'sidebar.html' %}
+
+  <div class="flex-1 ml-64 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+      <h1 class="text-2xl font-bold mb-6">Manage Devices</h1>
+
+      <!-- Add Device Button -->
+      <div class="mb-4 text-right">
+        <a href="{% url 'soildata:add_device' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition">
+          ➕ Add Device
+        </a>
+      </div>
+
+      <!-- Devices Table -->
+      <table id="devicesTable" class="w-full table-auto border border-gray-300 rounded">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border p-2 text-left">Device Name</th>
+            <th class="border p-2 text-left">Device ID</th>
+            <th class="border p-2 text-left">Location</th>
+            <th class="border p-2 text-left">Status</th>
+            <th class="border p-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for device in devices %}
+          <tr class="transition-all duration-500 {% if device.is_active %}bg-green-200 animate-pulse{% else %}bg-white{% endif %}" data-id="{{ device.id }}">
+            <td class="border p-2 font-semibold {% if device.is_active %}text-green-800{% endif %}">{{ device.name }}</td>
+            <td class="border p-2">{{ device.device_id }}</td>
+            <td class="border p-2">{{ device.location }}</td>
+            <td class="border p-2 status-cell">
+              {% if device.is_active %}
+                <span class="text-green-700 font-bold">Active</span>
+              {% else %}
+                <span class="text-gray-500">Inactive</span>
+              {% endif %}
+            </td>
+            <td class="border p-2 flex gap-2">
+              <button class="toggle-btn px-2 py-1 rounded text-white transition
+                             {% if device.is_active %}bg-yellow-500 hover:bg-yellow-600{% else %}bg-green-600 hover:bg-green-700{% endif %}"
+                      data-id="{{ device.id }}">
+                {% if device.is_active %}Deactivate{% else %}Activate{% endif %}
+              </button>
+              <a href="{% url 'soildata:remove_device' device.id %}" class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 transition">
+                Remove
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" class="border p-2 text-center text-gray-500">No devices added yet.</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // CSRF token setup for fetch
+    const csrftoken = '{{ csrf_token }}';
+
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const deviceId = btn.dataset.id;
+
+        fetch("{% url 'soildata:toggle_device_status' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'device_id=' + deviceId
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.success) {
+            const row = btn.closest('tr');
+            const statusCell = row.querySelector('.status-cell span');
+
+            if(data.is_active){
+              row.classList.add('bg-green-200','animate-pulse');
+              btn.textContent = 'Deactivate';
+              btn.classList.remove('bg-green-600','hover:bg-green-700');
+              btn.classList.add('bg-yellow-500','hover:bg-yellow-600');
+              statusCell.textContent = 'Active';
+              statusCell.className = 'text-green-700 font-bold';
+            } else {
+              row.classList.remove('bg-green-200','animate-pulse');
+              btn.textContent = 'Activate';
+              btn.classList.remove('bg-yellow-500','hover:bg-yellow-600');
+              btn.classList.add('bg-green-600','hover:bg-green-700');
+              statusCell.textContent = 'Inactive';
+              statusCell.className = 'text-gray-500';
+            }
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

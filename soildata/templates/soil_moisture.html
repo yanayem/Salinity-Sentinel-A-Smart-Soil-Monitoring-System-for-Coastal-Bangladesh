@@ -1,0 +1,118 @@
+{% load static %}
+{% include 'sidebar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Soil Moisture Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+<div class="ml-64 p-8 max-w-7xl mx-auto">
+
+  <h1 class="text-center text-4xl font-bold mb-12 text-green-400">🌿 Soil Moisture Dashboard</h1>
+
+  <!-- Active Devices Flex Container -->
+  <div class="flex flex-wrap justify-center gap-8">
+
+    {% for device in devices %}
+      {% if device.is_active %}
+      <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-lg hover:shadow-2xl transition w-96">
+
+        <h2 class="text-2xl font-semibold mb-3">{{ device.name }}</h2>
+        <p class="mb-1 text-lg"><strong>Device ID:</strong> {{ device.device_id }}</p>
+        <p class="mb-1 text-lg"><strong>Location:</strong> {{ device.location }}</p>
+        <p class="mb-1 text-lg"><strong>Status:</strong> 
+          <span class="text-green-500 font-bold">Active</span>
+        </p>
+        <p class="mb-3 text-lg"><strong>Last Updated:</strong> {{ device.latest_reading.timestamp|default:"Just now" }}</p>
+
+        <!-- Current Moisture -->
+        <div class="mt-4">
+          <h3 class="text-xl font-semibold mb-2">Current Soil Moisture: 
+            <span id="moisture-{{ device.id }}" class="text-lg">{{ device.latest_reading.moisture|default:42 }}%</span>
+          </h3>
+          <div class="w-full h-6 bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-full bg-green-500 transition-all duration-1000" id="moisture-bar-{{ device.id }}" style="width: {{ device.latest_reading.moisture|default:42 }}%"></div>
+          </div>
+        </div>
+
+        <!-- Graph -->
+        <div class="mt-6">
+          <canvas id="chart-{{ device.id }}" class="w-full h-64"></canvas>
+        </div>
+
+      </div>
+      {% endif %}
+    {% empty %}
+      <p class="text-center text-gray-400 w-full">No active devices found.</p>
+    {% endfor %}
+
+  </div>
+</div>
+
+<script>
+{% for device in devices %}
+  {% if device.is_active %}
+  // Sample chart data
+  let readings_{{ device.id }} = [
+    {time: "10:00", value: 40},
+    {time: "10:30", value: 42},
+    {time: "11:00", value: 43},
+    {time: "11:30", value: 41},
+    {time: "12:00", value: 42},
+  ];
+
+  const ctx_{{ device.id }} = document.getElementById('chart-{{ device.id }}').getContext('2d');
+  const chart_{{ device.id }} = new Chart(ctx_{{ device.id }}, {
+    type: 'line',
+    data: {
+      labels: readings_{{ device.id }}.map(r => r.time),
+      datasets: [{
+        label: 'Soil Moisture (%)',
+        data: readings_{{ device.id }}.map(r => r.value),
+        borderColor: '#43a047',
+        backgroundColor: 'rgba(67,160,71,0.2)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, max: 100 },
+        x: { grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Animate progress bar
+  const moistureBar_{{ device.id }} = document.getElementById('moisture-bar-{{ device.id }}');
+  const currentMoisture_{{ device.id }} = document.getElementById('moisture-{{ device.id }}');
+  moistureBar_{{ device.id }}.style.width = currentMoisture_{{ device.id }}.textContent;
+
+  // Simulate live updates
+  setInterval(() => {
+    const newVal = Math.floor(38 + Math.random()*10);
+    currentMoisture_{{ device.id }}.textContent = newVal + '%';
+    moistureBar_{{ device.id }}.style.width = newVal + '%';
+
+    const now = new Date().toLocaleTimeString().slice(0,5);
+    readings_{{ device.id }}.push({time: now, value: newVal});
+    if(readings_{{ device.id }}.length > 6) readings_{{ device.id }}.shift();
+
+    chart_{{ device.id }}.data.labels = readings_{{ device.id }}.map(r => r.time);
+    chart_{{ device.id }}.data.datasets[0].data = readings_{{ device.id }}.map(r => r.value);
+    chart_{{ device.id }}.update();
+  }, 5000);
+  {% endif %}
+{% endfor %}
+</script>
+
+</body>
+</html>

@@ -39,6 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'soilcore', 
     'weather',
+    'rest_framework',
+    'soildata',
+
+   'chatApp'
+
+
 ]
 
 MIDDLEWARE = [
@@ -149,6 +155,12 @@ OPENWEATHER_API_KEY = "963804a07802e5371e2a2bd19f6a7afb"  # 🔑 Replace with yo
 WEATHER_CACHE_SECONDS = 900  # 15 minutes
 
 
+#================================
+
+#OPENAI_API_KEY = "your_openai_api_key_here"
+# Google Gemini API key (free-tier)
+GEMINI_API_KEY = "AIzaSyAtdLvDmDGkLiQTf0WET-rpRxnOTFEPUQk"  # <-- এখানে তোমার Gemini API key বসাও
+CHAT_HISTORY_LIMIT = 50
 #
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'soilmonitor2025@gmail.com'  # example
@@ -157,5 +169,17 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'soilmonitor2025@gmail.com'
 EMAIL_HOST_PASSWORD = 'iekb dktq cfcl gnxc'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+
+
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 

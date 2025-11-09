@@ -32,3 +32,32 @@ def join_crops(crops):
     if isinstance(crops, list):
         return ', '.join(str(c) for c in crops)
     return crops
+
+
+from django import template
+register = template.Library()
+
+@register.filter
+def get_item(dictionary, key):
+    """Allows template to access dictionary value by key"""
+    if dictionary and key in dictionary:
+        return dictionary.get(key)
+    return None
+
+
+from django import template
+register = template.Library()
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
+from django import template
+
+register = template.Library()
+
+@register.filter
+def get_item(dictionary, key):
+    """Get dictionary value by key"""
+    return dictionary.get(key)

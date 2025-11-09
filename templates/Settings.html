@@ -3,145 +3,108 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings | Soil Monitor</title>
-  <link rel="stylesheet" href="{% static 'css/settings.css' %}">
-  <style>
-    .edit-icon {
-      float: right;
-      cursor: pointer;
-      font-size: 18px;
-      color: #007bff;
-    }
-
-    .edit-input {
-      display: none;
-      width: 60%;
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .setting-row span {
-      display: inline-block;
-    }
-
-    .save-profile-btn {
-      display: none;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .save-profile-btn:hover {
-      background-color: #218838;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-  <!-- Sidebar -->
+<body class="bg-gray-900 text-gray-100 flex min-h-screen">
   {% include 'sidebar.html' %}
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <section class="settings-container">
+  <main class="flex-1 p-10">
+    <div class="max-w-3xl mx-auto bg-gray-800 rounded-2xl shadow-lg p-8">
+      <h1 class="text-3xl font-bold text-[#00adb5] mb-6">⚙️ Account Settings</h1>
 
-      <h1>Settings</h1>
+      {% if messages %}
+      <div class="space-y-2 mb-6">
+        {% for message in messages %}
+        <div class="p-3 rounded-md 
+          {% if message.tags == 'success' %}bg-green-600{% elif message.tags == 'error' %}bg-red-600{% else %}bg-gray-700{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
 
-      <!-- Profile Info Card -->
-      <div class="settings-card">
-        <h3>
-          Profile Information
-          <i class="edit-icon" id="editProfile">✏️</i>
-        </h3>
+      <form method="POST" class="space-y-5">
+        {% csrf_token %}
+        <div>
+          <label class="block text-sm text-gray-300 mb-1">Full Name</label>
+          <input type="text" name="full_name"
+            value="{{ user.first_name }} {{ user.last_name }}"
+            class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00adb5]" />
+        </div>
 
-        <form method="POST" action="{% url 'settingpage' %}">
-  {% csrf_token %}
-  <div class="setting-row">
-    <label>Full Name:</label>
-    <input type="text" name="full_name" value="{{ user.first_name }} {{ user.last_name }}">
-  </div>
-  <div class="setting-row">
-    <label>Email:</label>
-    <input type="email" name="email" value="{{ user.email }}">
-  </div>
-  <div class="setting-row">
-    <label>Phone:</label>
-    <input type="text" name="phone_number" value="{{ profile.phone_number }}">
-  </div>
-  <div class="setting-row">
-    <label>Location:</label>
-    <input type="text" name="location" value="{{ profile.location }}">
-  </div>
-  <div class="setting-row">
-  <label>Role:</label>
-  <input type="text" name="role" value="{{ profile.role|default:'Soil Analyst' }}">
-</div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1">Email</label>
+          <input type="email" name="email" value="{{ user.email }}"
+            {% if not can_change_email %}disabled{% endif %}
+            class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00adb5]
+                   {% if not can_change_email %}opacity-60 cursor-not-allowed{% endif %}" />
+          {% if not can_change_email %}
+          <p class="text-xs text-gray-400 mt-1">⚠️ You can update your email again after 30 days.</p>
+          {% endif %}
+        </div>
 
-  <button type="submit" class="btn save-btn">Save</button>
-</form>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1">Phone Number</label>
+          <input type="text" name="phone_number"
+            value="{{ profile.phone_number|default:'' }}"
+            class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00adb5]" />
+        </div>
 
+        <div>
+          <label class="block text-sm text-gray-300 mb-1">Location</label>
+          <input type="text" name="location"
+            value="{{ profile.location|default:'' }}"
+            class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00adb5]" />
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit"
+            class="bg-[#00adb5] hover:bg-[#019ca3] text-white font-semibold px-6 py-2 rounded-lg shadow-md">
+            Save Changes
+          </button>
+        </div>
+      </form>
+
+      <!-- DOWNLOAD MY DATA -->
+      <div class="mt-10 border-t border-gray-700 pt-6">
+        <h2 class="text-xl font-semibold text-[#00adb5] mb-3">📦 Download My Data</h2>
+        <p class="text-gray-400 mb-3 text-sm">Download a copy of all your soil readings and profile info.</p>
+        <a href="{% url 'download_user_data' %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md inline-block">Download Data (ZIP)</a>
       </div>
 
-      <!-- Alerts Card -->
-      <div class="settings-card">
-        <h3>Alerts & Notifications</h3>
-        <div class="setting-row">
-          <label>Soil Moisture Alerts</label>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <label>pH Level Alerts</label>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <label>Temperature Alerts</label>
-          <label class="switch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-          </label>
-        </div>
+      <!-- DELETE ACCOUNT -->
+      <div class="mt-10 border-t border-gray-700 pt-6">
+        <h2 class="text-xl font-semibold text-red-500 mb-3">🗑️ Delete Account</h2>
+        <p class="text-gray-400 mb-3 text-sm">This will permanently delete your account and all your data. This action cannot be undone.</p>
+        <button onclick="confirmDelete()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md">Delete My Account</button>
       </div>
 
-      <!-- Devices Card -->
-      <div class="settings-card">
-        <h3>Connected Devices</h3>
-        <ul class="device-list">
-          <li>Device 1 - Field A <button class="btn action-btn">Remove</button></li>
-          <li>Device 2 - Field B <button class="btn action-btn">Remove</button></li>
-          <li>Device 3 - Greenhouse 1 <button class="btn action-btn">Remove</button></li>
-        </ul>
+      <!-- Modal -->
+      <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center">
+        <div class="bg-gray-800 p-6 rounded-lg w-96 shadow-lg text-center">
+          <h3 class="text-xl font-semibold text-red-500 mb-2">Confirm Account Deletion</h3>
+          <p class="text-gray-300 mb-4">Are you sure you want to delete your account permanently?</p>
+          <form method="POST" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <div class="flex justify-center gap-4">
+              <button type="button" onclick="closeModal()" class="bg-gray-600 px-4 py-2 rounded-md hover:bg-gray-700">Cancel</button>
+              <button type="submit" class="bg-red-600 px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
+            </div>
+          </form>
+        </div>
       </div>
-
-      <button class="btn save-btn">Save Changes</button>
-
-    </section>
+    </div>
   </main>
 
   <script>
-    document.getElementById('editProfile').addEventListener('click', () => {
-      const inputs = document.querySelectorAll('.edit-input');
-      const spans = document.querySelectorAll('.setting-row span');
-      const saveBtn = document.getElementById('saveProfileBtn');
-
-      inputs.forEach(i => i.style.display = 'inline-block');
-      spans.forEach(s => s.style.display = 'none');
-      saveBtn.style.display = 'inline-block';
-    });
-
-    
+    function confirmDelete() {
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    function closeModal() {
+      document.getElementById('deleteModal').classList.add('hidden');
+    }
   </script>
-
 </body>
 </html>

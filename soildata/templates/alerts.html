@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Alerts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+{% include 'sidebar.html' %}
+
+<main class="ml-64 p-8 max-w-7xl mx-auto">
+  <header class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-red-600">⚠️ Device Alerts</h1>
+    <p class="text-gray-600">Alerts for your active devices</p>
+  </header>
+
+  {% for device in devices %}
+  {% if device.is_active %}
+  <div class="bg-white shadow rounded-lg mb-8 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold">{{ device.name }}</h2>
+      <p class="text-sm text-gray-600">Device ID: {{ device.device_id }} | Location: {{ device.location|default:"-" }}</p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white">
+        <thead class="bg-red-600 text-white">
+          <tr>
+            <th class="py-3 px-4 text-left">Parameter</th>
+            <th class="py-3 px-4 text-left">Value</th>
+            <th class="py-3 px-4 text-left">Alert Type</th>
+            <th class="py-3 px-4 text-left">Time</th>
+          </tr>
+        </thead>
+        <tbody id="alerts-{{ device.id }}" class="divide-y divide-gray-200">
+          <!-- Alerts will be populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+
+</main>
+
+<script>
+  // Demo alerts
+  const demoAlerts = [
+    {parameter: "Soil Moisture", value: 85, threshold: "High", time: "10:30 06-11-2025"},
+    {parameter: "pH Level", value: 5.8, threshold: "Low", time: "10:35 06-11-2025"},
+    {parameter: "Temperature", value: 30, threshold: "High", time: "10:40 06-11-2025"},
+  ];
+
+  {% for device in devices %}
+  {% if device.is_active %}
+  const alertsContainer_{{ device.id }} = document.getElementById('alerts-{{ device.id }}');
+  let alertsData_{{ device.id }} = [];
+
+  {% if device.alerts.exists %}
+    // Use real alerts from database
+    alertsData_{{ device.id }} = [
+      {% for alert in device.alerts.all %}
+      {parameter: "Database Alert", value: "-", threshold: "Alert", time: "{{ alert.timestamp|date:'H:i d-m-Y' }}", message: "{{ alert.message }}" },
+      {% endfor %}
+    ];
+  {% else %}
+    // Use demo alerts
+    alertsData_{{ device.id }} = demoAlerts;
+  {% endif %}
+
+  alertsData_{{ device.id }}.forEach(alert => {
+    const tr = document.createElement('tr');
+
+    // Set color based on alert type
+    if(alert.threshold === "High"){
+      tr.className = "bg-red-100 text-red-700 font-semibold";
+    } else if(alert.threshold === "Low"){
+      tr.className = "bg-blue-100 text-blue-700 font-semibold";
+    } else {
+      tr.className = "bg-yellow-100 text-yellow-700 font-semibold";
+    }
+
+    tr.innerHTML = `
+      <td class="py-2 px-4">${alert.parameter || "Alert"}</td>
+      <td class="py-2 px-4">${alert.value || "-"}</td>
+      <td class="py-2 px-4">${alert.threshold}</td>
+      <td class="py-2 px-4">${alert.time}</td>
+    `;
+    alertsContainer_{{ device.id }}.appendChild(tr);
+  });
+  {% endif %}
+  {% endfor %}
+</script>
+
+</body>
+</html>

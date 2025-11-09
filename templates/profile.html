@@ -3,227 +3,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile | Soil Monitor</title>
-  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8f9fa;
-      margin: 0;
-      padding: 0;
-      display: flex;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 30px;
-      margin-left: 240px; /* space for sidebar */
-    }
-
-    .profile-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .profile-card, .info-card, .activity-card, .soil-card {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      transition: 0.3s;
-    }
-
-    .profile-card:hover, .info-card:hover, .activity-card:hover, .soil-card:hover {
-      transform: translateY(-3px);
-    }
-
-    .profile-avatar {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .profile-avatar img {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      border: 3px solid #4CAF50;
-      object-fit: cover;
-    }
-
-    .upload-btn {
-      display: block;
-      margin: 10px auto;
-      font-size: 0.85rem;
-      color: #007bff;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    .username {
-      text-align: center;
-      color: #333;
-      font-size: 1.5rem;
-      margin-bottom: 5px;
-    }
-
-    .user-role {
-      text-align: center;
-      color: #777;
-      margin-bottom: 15px;
-    }
-
-    .edit-btn {
-      display: block;
-      margin: 0 auto;
-      background: #4CAF50;
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .edit-btn:hover {
-      background: #43a047;
-    }
-
-    h3 {
-      margin-bottom: 10px;
-      color: #333;
-      border-left: 5px solid #4CAF50;
-      padding-left: 10px;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 6px 0;
-      font-size: 0.95rem;
-      color: #444;
-    }
-
-    .info-row input {
-      border: none;
-      background: #f4f4f4;
-      border-radius: 6px;
-      padding: 5px 8px;
-      width: 55%;
-    }
-
-    .activity-list {
-      list-style: disc;
-      padding-left: 20px;
-      color: #555;
-    }
-
-    .activity-list li {
-      margin: 5px 0;
-    }
-
-    .soil-card ul {
-      padding-left: 20px;
-      color: #444;
-    }
-
-    .save-btn {
-      margin-top: 10px;
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .save-btn:hover {
-      background: #0069d9;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
 </head>
-<body>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-200">
 
-  <!-- Sidebar -->
   {% include 'sidebar.html' %}
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <section class="profile-container">
+  <main class="ml-60 p-8">
+    <div class="flex flex-wrap -mx-4 gap-y-8 justify-center">
 
-      <!-- Profile Card (Full width) -->
-<div class="profile-card" style="grid-column: 1 / -1;">
-  <div class="profile-avatar">
-    <img id="profilePic" src="{% static 'media/user.png' %}" alt="User Avatar">
-    <label for="uploadPic" class="upload-btn">Upload New Photo</label>
-    <input type="file" id="uploadPic" accept="image/*" class="hidden">
-  </div>
-  <h2 class="username">{{ user.first_name|default:"Yeasin" }} {{ user.last_name|default:"Arafat" }}</h2>
-</div>
-
-<!-- Account Information Card -->
-<div class="info-card">
-  <h3>Account Information</h3>
-  <div class="info-row"><span>Full Name:</span> <span>{{ user.first_name }} {{ user.last_name }}</span></div>
-  <div class="info-row"><span>Email:</span> <span>{{ user.email|default:'yeasin@example.com' }}</span></div>
-  <div class="info-row"><span>Phone:</span> <span>{{ profile.phone_number|default:'+8801234567890' }}</span></div>
-  <div class="info-row"><span>Location:</span> <span>{{ profile.location|default:'Dhaka, Bangladesh' }}</span></div>
-  <div class="info-row"><span>Joined:</span> <span>{{ user.date_joined|date:'M d, Y' }}</span></div>
-</div>
-
-      <!-- Soil Monitoring Info -->
-      <div class="soil-card">
-        <h3>Soil Monitoring Overview</h3>
-        <ul>
-          <li><strong>Active Fields:</strong> 4 (Field A, B, C, D)</li>
-          <li><strong>Soil pH Range:</strong> 6.2 – 7.4</li>
-          <li><strong>Average Moisture Level:</strong> 62%</li>
-          <li><strong>Temperature Range:</strong> 22°C – 30°C</li>
-          <li><strong>Last Sensor Sync:</strong> 10 mins ago</li>
-          <li><strong>Device Status:</strong> All devices online</li>
-        </ul>
+      <!-- PROFILE CARD -->
+      <div class="w-full lg:w-1/2 px-4">
+        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 h-96 max-h-[480px] max-w-[600px] mx-auto flex flex-col items-center">
+          <div class="relative">
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% if profile.profile_pic %}
+                <img id="profilePic" src="{{ profile.profile_pic.url }}" alt="User Avatar" class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"/>
+              {% else %}
+                <img id="profilePic" src="{% static 'media/user.png' %}" alt="User Avatar" class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"/>
+              {% endif %}
+              <label for="uploadPic" class="absolute bottom-2 right-2 bg-blue-700 hover:bg-blue-500 text-white w-9 h-9 flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
+                <i class="fas fa-camera"></i>
+              </label>
+              <input type="file" id="uploadPic" name="profile_pic" class="hidden" accept="image/*" onchange="this.form.submit()">
+            </form>
+          </div>
+          <h2 class="mt-4 text-2xl font-semibold text-white">{{ user.first_name}} {{ user.last_name}}</h2>
+          <p class="text-gray-400 mt-1"><i class="fas fa-leaf"></i> Soil Monitoring Expert</p>
+        </div>
       </div>
 
-      <!-- Activity Card -->
-      <div class="activity-card">
-        <h3>Recent Activity</h3>
-        <ul class="activity-list">
-          <li>Checked soil temperature in Field A</li>
-          <li>Updated moisture sensor data</li>
-          <li>Calibrated pH sensor for Field C</li>
-          <li>Generated weekly soil health report</li>
-          <li>Adjusted irrigation levels automatically</li>
-        </ul>
+      <!-- ACCOUNT INFO CARD -->
+      <div class="w-full lg:w-1/2 px-4">
+        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 h-96 max-h-[480px] max-w-[600px] mx-auto flex flex-col justify-between">
+          <div>
+            <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-user-circle"></i> Account Info</h3>
+            <div class="mt-4 space-y-3">
+              <div class="flex justify-between items-center border-b border-gray-600 pb-1">
+                <div class="flex items-center gap-2"><i class="fas fa-id-card text-green-500"></i> Full Name</div>
+                <div>{{ user.first_name }} {{ user.last_name }}</div>
+              </div>
+              <div class="flex justify-between items-center border-b border-gray-600 pb-1">
+                <div class="flex items-center gap-2"><i class="fas fa-envelope text-green-500"></i> Email</div>
+                <div>{{ user.email|default:'yeasin@example.com' }}</div>
+              </div>
+              <div class="flex justify-between items-center border-b border-gray-600 pb-1">
+                <div class="flex items-center gap-2"><i class="fas fa-phone-alt text-green-500"></i> Phone</div>
+                <div>{{ profile.phone_number|default:'+8801234567890' }}</div>
+              </div>
+              <div class="flex justify-between items-center border-b border-gray-600 pb-1">
+                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-green-500"></i> Location</div>
+                <div>{{ profile.location|default:'Dhaka, Bangladesh' }}</div>
+              </div>
+              <div class="flex justify-between items-center border-b border-gray-600 pb-1">
+                <div class="flex items-center gap-2"><i class="fas fa-calendar-alt text-green-500"></i> Joined</div>
+                <div>{{ user.date_joined|date:'M d, Y' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDIT BUTTON -->
+          <div class="mt-4 flex gap-3">
+            <button id="editBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2"><i class="fas fa-edit"></i> Edit</button>
+            <button id="saveBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 hidden"><i class="fas fa-save"></i> Save</button>
+          </div>
+        </div>
       </div>
 
-    </section>
+      <!-- SOIL INFO CARD -->
+      <div class="w-full lg:w-1/2 px-4">
+        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 h-96 max-h-[480px] max-w-[600px] mx-auto flex flex-col">
+          <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-seedling"></i> Soil Monitoring</h3>
+          <ul class="mt-4 space-y-2 text-gray-300">
+            <li><i class="fas fa-globe text-green-500"></i> <strong>Active Fields:</strong> 4 (A, B, C, D)</li>
+            <li><i class="fas fa-vial text-green-500"></i> <strong>pH Range:</strong> 6.2 – 7.4</li>
+            <li><i class="fas fa-tint text-green-500"></i> <strong>Moisture:</strong> 62%</li>
+            <li><i class="fas fa-thermometer-half text-green-500"></i> <strong>Temperature:</strong> 22°C – 30°C</li>
+            <li><i class="fas fa-sync-alt text-green-500"></i> <strong>Last Sync:</strong> 10 mins ago</li>
+            <li><i class="fas fa-microchip text-green-500"></i> <strong>Status:</strong> All devices online</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ACTIVITY CARD -->
+      <div class="w-full lg:w-1/2 px-4">
+        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 h-96 max-h-[480px] max-w-[600px] mx-auto flex flex-col">
+          <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-history"></i> Recent Activity</h3>
+          <ul class="mt-4 space-y-2 text-gray-300">
+            <li><i class="fas fa-thermometer-quarter text-green-500"></i> Checked soil temperature in Field A</li>
+            <li><i class="fas fa-tint text-green-500"></i> Updated moisture sensor data</li>
+            <li><i class="fas fa-vial text-green-500"></i> Calibrated pH sensor for Field C</li>
+            <li><i class="fas fa-chart-line text-green-500"></i> Generated weekly soil health report</li>
+            <li><i class="fas fa-water text-green-500"></i> Adjusted irrigation levels automatically</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
   </main>
 
-  <!-- JS -->
   <script>
     const editBtn = document.getElementById("editBtn");
-    const inputs = document.querySelectorAll(".info-row input");
-    const saveBtn = document.querySelector(".save-btn");
+    const saveBtn = document.getElementById("saveBtn");
+
+    editBtn.addEventListener("click", () => {
+      saveBtn.classList.remove("hidden");
+      editBtn.classList.add("hidden");
+    });
+
+    saveBtn.addEventListener("click", () => {
+      saveBtn.classList.add("hidden");
+      editBtn.classList.remove("hidden");
+    });
+
     const uploadPic = document.getElementById("uploadPic");
     const profilePic = document.getElementById("profilePic");
-
-    editBtn?.addEventListener("click", () => {
-      inputs.forEach(i => i.removeAttribute("disabled"));
-      saveBtn.style.display = "block";
-      alert("Profile fields are now editable!");
-    });
-
-    saveBtn?.addEventListener("click", () => {
-      alert("Profile saved successfully (sample action)");
-    });
-
-    uploadPic.addEventListener("change", (e) => {
+    uploadPic.addEventListener("change", e => {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
@@ -232,6 +133,5 @@
       }
     });
   </script>
-
 </body>
 </html>

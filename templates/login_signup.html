@@ -30,7 +30,7 @@
         <!-- LOGIN CARD -->
         <div class="card front" id="loginCard">
           <h1>Welcome Back</h1>
-          <form id="loginForm" method="post" action="{% url 'login_signup' %}">
+          <form id="loginForm" method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="input-group">
               <i class="fa fa-envelope"></i>
@@ -99,7 +99,7 @@
           <form
             id="signupForm"
             method="post"
-            action="{% url 'login_signup' %}?mode=signup"
+            action="{% url 'login' %}?mode=signup"
           >
             {% csrf_token %}
 
