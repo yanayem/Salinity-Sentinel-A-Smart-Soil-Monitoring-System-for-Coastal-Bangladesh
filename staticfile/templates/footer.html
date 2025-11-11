@@ -1,0 +1,73 @@
+{% load static %}
+<link rel="stylesheet" href="/static/css/footer.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <div class="footer-logo">
+        <img src="{% static 'media/logo.png' %}" alt="Soil Monitor Logo" />
+        <span>Soil Monitor</span>
+      </div>
+      <div class="social-icons">
+  <a href="https://facebook.com" target="_blank" class="facebook"><i class="fab fa-facebook-f"></i></a>
+  <a href="https://twitter.com" target="_blank" class="twitter"><i class="fab fa-twitter"></i></a>
+  <a href="https://linkedin.com" target="_blank" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+  <a href="https://instagram.com" target="_blank" class="instagram"><i class="fab fa-instagram"></i></a>
+</div>
+
+    </div>
+
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="{% url 'homepage' %}">Home</a></li>
+        <li><a href="{% url 'soil_types' %}">Soil Types</a></li>
+        <li><a href="{% url 'terms_privacy' %}">Terms & Privacy</a></li>
+        <li><a href="{% url 'aboutpage' %}">About Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>Email: soilmonitor2025@gmail.com</p>
+      <p>Phone: +880 1780 123456</p>
+      <p>Dhaka, Bangladesh</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p>Subscribe to get updates about soil monitoring alerts and tips.</p>
+      <form class="newsletter-form" method="POST" action="{% url 'subscribe_newsletter' %}">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="Your email" required />
+        <button type="submit">Subscribe</button>
+      </form>
+      <div id="newsletter-toast" class="toast"></div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 Soil Monitor. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const toast = document.getElementById("newsletter-toast");
+
+    {% if messages %}
+      {% for message in messages %}
+        toast.textContent = "{{ message }}";
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      {% endfor %}
+    {% endif %}
+  });
+</script>

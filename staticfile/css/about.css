@@ -1,0 +1,230 @@
+/* ==========================
+   General Page Styles
+========================== */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg, #021526, #041c32);
+  color: #EAEAEA;
+  min-height: 100vh;
+  padding-top: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 1.5s ease-in-out;
+  overflow-x: hidden;
+}
+
+.pasg {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================
+   Header Animations
+========================== */
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #00bfff;
+  text-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
+  animation: fadeInUp 1s ease;
+  text-align: center;
+}
+
+header p {
+  font-size: 1rem;
+  color: #c0c0c0;
+  animation: fadeInUp 1.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================
+   Card Grid (Responsive)
+========================== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 25px;
+  padding: 60px 10%;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  animation: fadeInGrid 1.5s ease-in-out;
+}
+
+@media (max-width: 992px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr); 
+    padding: 50px 8%;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-grid {
+    grid-template-columns: 1fr; 
+    padding: 40px 6%;
+  }
+}
+
+
+@keyframes fadeInGrid {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================
+   Individual Card Styles
+========================== */
+.card {
+  background: linear-gradient(180deg, #0e1c36, #13294b);
+  border-radius: 16px;
+  overflow: hidden;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid rgba(0, 191, 255, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transform: scale(1);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.03);
+  background: linear-gradient(180deg, #13294b, #0e1c36);
+  box-shadow: 0 10px 25px rgba(0, 191, 255, 0.4);
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.card h1 {
+  font-size: 1.5rem;
+  margin-top: 15px;
+  color: #00bfff;
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #c0c0c0;
+  margin: 10px 0 20px;
+  line-height: 1.5;
+  animation: fadeInText 1.5s ease;
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card button {
+  padding: 10px 22px;
+  border: none;
+  background-color: #1b3c53;
+  color: #EAEAEA;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #00bfff;
+  color: #021526;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
+  transform: scale(1.05);
+}
+
+/* ==========================
+   Social Icons
+========================== */
+.social {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: #00bfff;
+  font-size: 1.2rem;
+  background: rgba(0, 191, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease, color 0.3s ease;
+}
+
+.social a:hover {
+  transform: rotate(15deg) scale(1.2);
+  color: #021526;
+  background: #00bfff;
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.7);
+}
+
+/* ==========================
+   Footer
+========================== */
+footer {
+  text-align: center;
+  background-color: #0e1c36;
+  color: #EAEAEA;
+  padding: 15px;
+  margin-top: auto;
+  font-size: 0.9rem;
+  width: 100%;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
+  animation: fadeInFooter 2s ease-in-out;
+}
+
+@keyframes fadeInFooter {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================
+   Snow Layer
+========================== */
+#snow-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+header h1,
+header p {
+  position: relative;
+  z-index: 1;
+}

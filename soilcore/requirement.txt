@@ -1,8 +1,0 @@
-mysqlclient
-python-dotenv
-pymysql
-
-
-requests
-python-dotenv
-pytz

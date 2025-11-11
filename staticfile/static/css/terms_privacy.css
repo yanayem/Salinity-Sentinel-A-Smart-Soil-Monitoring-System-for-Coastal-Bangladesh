@@ -1,0 +1,90 @@
+/* ---------- BODY & GLOBAL ---------- */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f4f6f8;
+  color: #333;
+  line-height: 1.6;
+}
+
+
+.header {
+  background: #0a3d62;
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.logo span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.logo a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #fff;
+}
+
+.logo a:hover {
+  opacity: 0.8;
+}
+
+
+.content-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ---------- POLICY SECTION ---------- */
+.policy-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.policy-section h1 {
+  color: #0a3d62;
+  margin-bottom: 1rem;
+}
+
+.policy-section h2 {
+  color: #1e6091;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.policy-section p {
+  color: #555;
+  margin-bottom: 0.8rem;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .content-container {
+    padding: 0 0.5rem;
+  }
+
+  .header {
+    padding: 1rem;
+  }
+
+  .logo span {
+    font-size: 1.2rem;
+  }
+}
