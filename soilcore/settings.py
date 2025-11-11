@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-284n^dwcj7we)ny7ucj&@=qnz#olyw*g8e+e)(__!g_h46^fu!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = ["soil-monitoring.onrender.com"]
-#CSRF_TRUSTED_ORIGINS = ["https://soil-monitoring.onrender.com"]
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["soil-monitoring.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://soil-monitoring.onrender.com"]
 
 ## fo time zone issue
 
