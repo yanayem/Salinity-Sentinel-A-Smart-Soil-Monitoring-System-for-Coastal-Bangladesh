@@ -13,116 +13,111 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-200 min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white :text-gray-900 min-h-screen">
 
   {% include 'sidebar.html' %}
 
-  <main class="ml-60 p-8">
-    <div class="flex flex-wrap -mx-4 gap-y-8 justify-center">
+  <main class="md:ml-60 mt-16 p-8 space-y-8">
 
-      <!-- PROFILE CARD -->
-<div class="w-full lg:w-1/2 px-4">
-  <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 max-w-[600px] mx-auto flex flex-col items-center">
-    <img src="https://www.w3schools.com/howto/img_avatar.png"
-         alt="User Avatar"
-         class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"/>
-    <h2 class="mt-4 text-2xl font-semibold text-white">{{ user.first_name }} {{ user.last_name }}</h2>
-    <p class="text-gray-400 mt-1"><i class="fas fa-envelope"></i> {{ user.email }}</p>
-    <p class="text-gray-400 mt-1"><i class="fas fa-calendar-alt"></i> Joined: {{ user.date_joined|date:"M d, Y" }}</p>
-    <a href="{% url 'account:settingpage' %}" class="mt-3 text-sm text-blue-400 hover:underline flex items-center gap-1">
-      <i class="fas fa-edit"></i> Edit Profile Info
-    </a>
-  </div>
-</div>
-
-      <!-- LATEST MOISTURE READINGS -->
-      <div class="w-full lg:w-1/2 px-4">
-        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 max-w-[600px] mx-auto flex flex-col">
-          <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-tint"></i> Latest Moisture Readings</h3>
-          <ul class="mt-4 space-y-2 text-gray-300">
-            {% for reading in readings %}
-              <li class="flex justify-between items-center">
-                <div>
-                  <i class="fas fa-leaf text-green-500"></i>
-                  Field {{ reading.device.name|default:"-" }}: {{ reading.moisture }}%
-                </div>
-                <div class="text-xs text-gray-400">
-                  {{ reading.updated_at|date:"M d, Y H:i" }}
-                </div>
-              </li>
-            {% empty %}
-              <li>No moisture readings available</li>
-            {% endfor %}
-          </ul>
-        </div>
+    <!-- PROFILE CARD FULL WIDTH -->
+    <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full flex items-center gap-6">
+      <img id="profilePic"
+                   {% if profile.profile_pic %}
+                     src="{{ profile.profile_pic.url }}"
+                   {% else %}
+                     src="https://www.w3schools.com/howto/img_avatar.png"
+                   {% endif %}
+                   alt="User Avatar"
+                   class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"/>
+              
+      <div class="flex flex-col justify-center">
+        <h2 class="text-2xl font-semibold  text-gray-900 dark:text-white">{{ user.first_name }} {{ user.last_name }}</h2>
+        <p class=" text-gray-600 dark:text-gray-400 mt-1"><i class="fas fa-envelope"></i> {{ user.email }}</p>
       </div>
-
-      <!-- MOISTURE GRAPH -->
-      <div class="w-full px-4">
-        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 max-w-[900px] mx-auto">
-          <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-chart-line"></i> Moisture Graph</h3>
-          <canvas id="moistureChart" class="mt-4"></canvas>
-        </div>
-      </div>
-
     </div>
+
+    <!-- LATEST MOISTURE READINGS -->
+    <div class="bg-gray-100 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full max-w-[900px] mx-auto">
+      <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-tint"></i> Latest Moisture Readings</h3>
+      <ul class="mt-4 space-y-2 text-gray-600 dark:text-gray-400">
+        {% for reading in readings %}
+          <li class="flex justify-between items-center">
+            <div>
+              <i class="fas fa-leaf text-green-500"></i>
+              Field {{ reading.device.name|default:"-" }}: {{ reading.moisture }}%
+            </div>
+            <div class="text-xs text-gray-600 dark:text-gray-400">
+              {{ reading.updated_at|date:"M d, Y H:i" }}
+            </div>
+          </li>
+        {% empty %}
+          <li>No moisture readings available</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- MOISTURE GRAPH -->
+    <div class="bg-gray-100 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full max-w-[900px] mx-auto">
+      <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-chart-line"></i> Moisture Graph</h3>
+      <canvas id="moistureChart" class="mt-4"></canvas>
+    </div>
+
   </main>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    // Profile Pic Upload Preview
-    const uploadPic = document.getElementById("uploadPic");
-    const profilePic = document.getElementById("profilePic");
-    uploadPic.addEventListener("change", e => {
-      const file = e.target.files[0];
-      if(file){
-        const reader = new FileReader();
-        reader.onload = () => profilePic.src = reader.result;
-        reader.readAsDataURL(file);
-        document.getElementById("profileForm").submit();
-      }
-    });
-
-    // Remove Profile Pic
-    const removePic = document.getElementById("removePic");
-    removePic.addEventListener("click", () => {
-      profilePic.src = "https://www.w3schools.com/howto/img_avatar.png";
-      $.ajax({
-        url: "{% url 'account:remove_profile_pic' %}",
-        method: "POST",
-        headers: {"X-CSRFToken": "{{ csrf_token }}"},
-        data: JSON.stringify({remove: true}),
-        contentType: "application/json",
-        success: () => console.log("Profile picture removed")
-      });
-    });
-
-    // Chart.js for Moisture Graph
     const ctx = document.getElementById('moistureChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-          label: 'Moisture (%)',
-          data: {{ chart_data|safe }},
-          borderColor: '#00ffb5',
-          backgroundColor: 'rgba(0, 255, 181, 0.2)',
-          tension: 0.3,
-          fill: true,
-          pointRadius: 5,
-          pointHoverRadius: 7
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { labels: { color: 'white' } } },
-        scales: {
-          x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-          y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' }, beginAtZero: true }
+    let chart;
+
+    async function fetchData() {
+      try {
+        const response = await fetch("{% url 'soildata:api_moisture' %}");
+        const data = await response.json();
+
+        const labels = data.readings.map(r => r.time).reverse();
+        const values = data.readings.map(r => r.moisture).reverse();
+
+        if(chart){
+          chart.data.labels = labels;
+          chart.data.datasets[0].data = values;
+          chart.update();
+        } else {
+          chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Moisture (%)',
+                data: values,
+                borderColor: '#00ffb5',
+                backgroundColor: 'rgba(0,255,181,0.2)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { labels: { color: 'white' } } },
+              scales: {
+                x: { ticks: { color: 'black dark:white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                y: { ticks: { color: 'black dark:white' }, grid: { color: 'rgba(255,255,255,0.1)' }, beginAtZero: true }
+              }
+            }
+          });
         }
+
+      } catch(err){
+        console.error("Error fetching moisture data:", err);
       }
-    });
+    }
+
+    // Initial load
+    fetchData();
+
+    // Auto-refresh every 5 seconds for motion effect
+    setInterval(fetchData, 5000);
   </script>
 </body>
 </html>

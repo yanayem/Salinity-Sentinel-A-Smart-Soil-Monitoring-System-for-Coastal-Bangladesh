@@ -1,86 +1,127 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Soil Type</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class', // keep dark mode enabled
-        theme: {
-          extend: {
-            colors: {
-              accent: '#5ac8fa',
-              accentDark: '#3ba0d8',
-            },
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Soil Type</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', 
+      theme: {
+        extend: {
+          colors: {
+            accent: '#5ac8fa',
+            accentDark: '#3ba0d8',
           },
         },
-      };
-    </script>
-  </head>
-  <body class="transition-colors duration-500 bg-[rgb(15_23_42/1)] flex items-center justify-center min-h-screen relative text-white">
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+</head>
+<body class="transition-colors duration-500 bg-gray-100 dark:bg-[rgb(15_23_42/1)] flex flex-col items-center min-h-screen text-gray-900 dark:text-white">
 
-    <!-- Particle canvas -->
-    <canvas id="particle-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
+  <nav class="fixed top-0 w-full backdrop-blur-md z-50 transition-colors duration-500
+              bg-gray-100/50 dark:bg-gray-700 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 
-    <!-- Form Container -->
-    <section class="z-10 w-full max-w-2xl p-10 rounded-2xl backdrop-blur-lg shadow-xl bg-white/10 transition-all duration-500">
-      <h1 class="text-center text-3xl font-semibold text-accent mb-3">Add New Soil Type</h1>
-      <p class="text-center text-gray-300 mb-6">Fill out the form below to add a new soil type.</p>
+      <div class="flex items-center gap-2">
+        <img src="{% static 'media/logo.png' %}" alt="Logo" class="w-10 h-10">
+        <span class="font-bold text-lg text-gray-900 dark:text-white">Salinity Sentinel</span>
+      </div>
 
-      <form method="POST" class="space-y-4">
-        {% csrf_token %}
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="text" name="name" placeholder="Soil Name" required
-            class="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
-          <input type="text" name="location" placeholder="Location (optional)"
-            class="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
-        </div>
+      <button id="themeToggle" class="p-2 rounded-full shadow transition-transform hover:scale-105">
+        <i id="themeIcon" class="fas fa-moon text-yellow-400 dark:text-yellow-400"></i>
+      </button>
+    </div>
+  </nav>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="number" name="ph_min" step="0.1" placeholder="Min pH" required
-            class="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
-          <input type="number" name="ph_max" step="0.1" placeholder="Max pH" required
-            class="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
-        </div>
+ 
+  <canvas id="particle-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
 
-        <textarea name="description" placeholder="Description..." required
-          class="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md h-36 resize-none"></textarea>
 
-        <input type="text" name="suitable_crops" placeholder="Suitable Crops"
-          class="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
+  <section class="z-10 w-full max-w-2xl p-10 rounded-2xl backdrop-blur-lg shadow-xl
+                  bg-white/80 dark:bg-[rgb(15_23_42/1)] mt-24 transition-all duration-500">
+    <h1 class="text-center text-3xl font-semibold text-accent dark:text-accent mb-3">Add New Soil Type</h1>
+    <p class="text-center text-gray-700 dark:text-gray-300 mb-6">Fill out the form below to add a new soil type.</p>
 
-        <button type="submit"
-          class="w-full py-3 rounded-xl bg-accent text-slate-900 font-semibold hover:bg-accentDark transition-all shadow-md hover:shadow-lg">Save Soil Type</button>
+    <form method="POST" class="space-y-4">
+      {% csrf_token %}
 
-        <a href="{% url 'soil_types' %}"
-          class="inline-block text-accent hover:text-accentDark font-medium transition-all mt-2">← Back to List</a>
-      </form>
-    </section>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" name="name" placeholder="Soil Name" required
+          class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
+        <input type="text" name="location" placeholder="Location (optional)"
+          class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
+      </div>
 
-    <script>
-      // Particle canvas animation
-      const canvas = document.getElementById("particle-canvas");
-      const ctx = canvas.getContext("2d");
-      let particles = [];
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="number" name="ph_min" step="0.1" placeholder="Min pH" required
+          class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
+        <input type="number" name="ph_max" step="0.1" placeholder="Max pH" required
+          class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
+      </div>
 
-      function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-      window.addEventListener("resize", resizeCanvas);
-      resizeCanvas();
+      <textarea name="description" placeholder="Description..." required
+        class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md h-36 resize-none"></textarea>
 
-      class Particle {
-        constructor() { this.reset(); }
-        reset() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size=Math.random()*2+1; this.speedX=(Math.random()-0.5)*0.2; this.speedY=(Math.random()-0.5)*0.2; this.opacity=Math.random()*0.3+0.1; }
-        update(){ this.x+=this.speedX; this.y+=this.speedY; if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height) this.reset(); }
-        draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${this.opacity})`; ctx.fill(); }
+      <input type="text" name="suitable_crops" placeholder="Suitable Crops"
+        class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none transition-shadow shadow-sm hover:shadow-md"/>
+
+      <button type="submit"
+        class="w-full py-3 rounded-xl bg-accent text-gray-900 dark:text-gray-900 font-semibold hover:bg-accentDark transition-all shadow-md hover:shadow-lg">Save Soil Type</button>
+
+      <a href="{% url 'soil_types' %}"
+        class="inline-block text-yellow-500 dark:text-accent hover:text-yellow-600 dark:hover:text-accent font-medium transition-all mt-2">← Back to List</a>
+    </form>
+  </section>
+
+
+  <script>
+
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('themeIcon');
+
+    function updateThemeIcon() {
+      if(html.classList.contains('dark')){
+        themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+        themeIcon.classList.remove('text-yellow-500'); themeIcon.classList.add('text-yellow-400');
+      } else {
+        themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun');
+        themeIcon.classList.remove('text-yellow-400'); themeIcon.classList.add('text-yellow-500');
       }
+    }
 
-      for(let i=0;i<60;i++) particles.push(new Particle());
-      function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animate); }
-      animate();
-    </script>
-  </body>
+    updateThemeIcon();
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      updateThemeIcon();
+    });
+
+
+    const canvas = document.getElementById("particle-canvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(){ this.reset(); }
+      reset(){ this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.size=Math.random()*2+1; this.speedX=(Math.random()-0.5)*0.2; this.speedY=(Math.random()-0.5)*0.2; this.opacity=Math.random()*0.3+0.1; }
+      update(){ this.x+=this.speedX; this.y+=this.speedY; if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height) this.reset(); }
+      draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=`rgba(0,0,0,${this.opacity})`; ctx.fill(); }
+    }
+
+    for(let i=0;i<60;i++) particles.push(new Particle());
+    function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animate); }
+    animate();
+  </script>
+</body>
 </html>

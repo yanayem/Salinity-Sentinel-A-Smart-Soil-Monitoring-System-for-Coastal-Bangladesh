@@ -7,9 +7,7 @@ from datetime import timedelta
 # Helper function for file uploads
 # -------------------------
 def user_directory_path(instance, filename):
-    """
-    Uploads files to MEDIA_ROOT/user_<id>/<filename>
-    """
+    
     return f'user_{instance.user.id}/{filename}'
 
 
@@ -35,6 +33,7 @@ class UserProfile(models.Model):
     # -------------------------
     # Check if user can change email (once per 30 days)
     # -------------------------
+    
     def can_change_email(self):
         if self.last_email_change:
             return timezone.now() - self.last_email_change >= timedelta(days=30)
@@ -43,6 +42,7 @@ class UserProfile(models.Model):
     # -------------------------
     # Update email and timestamp
     # -------------------------
+    
     def update_email(self, new_email):
         if self.can_change_email():
             self.user.email = new_email
@@ -51,3 +51,5 @@ class UserProfile(models.Model):
             self.save()
             return True
         return False
+    
+    # -------------------------

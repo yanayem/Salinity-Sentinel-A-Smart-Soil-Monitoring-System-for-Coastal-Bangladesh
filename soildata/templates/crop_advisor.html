@@ -2,53 +2,86 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crop Advisor</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Soil Analytics</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: { extend: { colors: { accent: '#3b82f6' } } }
-    }
-  </script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex">
+<body class="transition-colors duration-500 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+
 
   {% include "sidebar.html" %}
 
-  <div class="flex-1 p-6 ml-64 space-y-6">
-    <h1 class="text-3xl font-bold text-blue-400">🌾 Crop Advisor</h1>
+<div class="mt-28 max-w-2xl mx-auto p-6 rounded-2xl bg-white/80 dark:bg-gray-800 shadow-lg transition-all">
 
-    {% if moisture %}
-      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-        <h2 class="text-xl font-semibold mb-4">Current Soil Moisture</h2>
-        <p class="text-5xl font-bold text-blue-500">{{ moisture }}%</p>
-      </div>
+  <h1 class="text-3xl font-bold text-center text-accent mb-6">Smart Soil Analytics</h1>
+  <p class="text-center text-gray-700 dark:text-gray-300 mb-8">Enter soil pH to see suitable crops.</p>
 
-      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-semibold mb-4 text-center">Recommended Crops or Trees</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-          {% for crop in suggestion %}
-          <div class="p-4 bg-blue-50 dark:bg-gray-700 rounded-lg shadow hover:shadow-xl transition">
-            <p class="text-lg font-medium">{{ crop }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% else %}
-      <div class="bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 p-6 rounded-lg text-center">
-        <p class="text-lg font-semibold">No soil moisture data available!</p>
-        <p>Please connect your device to get live moisture readings.</p>
-      </div>
+  <form method="POST" class="space-y-4">
+    {% csrf_token %}
+    <input type="number" step="0.1" name="ph" placeholder="Soil pH" required
+      value="{{ ph_value|default:'' }}"
+      class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none shadow-sm hover:shadow-md"/>
+    <input type="text" name="soil_type" placeholder="Soil Type (optional)"
+      value="{{ soil_type_input }}"
+      class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none shadow-sm hover:shadow-md"/>
+    <input type="text" name="location" placeholder="Location (optional)"
+      value="{{ location_input }}"
+      class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent outline-none shadow-sm hover:shadow-md"/>
+
+    <button type="submit"
+      class="w-full py-3 px-6 bg-gray-100 dark:bg-blue-200 text-gray-900 dark:text-gray-900 font-semibold rounded-xl hover:bg-accentDark transition-all shadow-md hover:shadow-lg">
+      Get Recommendations
+    </button>
+  </form>
+
+  <!-- Recommendation Cards -->
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Crops Card -->
+    {% if recommendations %}
+    <div class="p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-inner">
+      <h2 class="text-2xl font-bold text-accent mb-3">Recommended Crops</h2>
+      <ul class="list-disc list-inside text-gray-800 dark:text-gray-200">
+        {% for rec in recommendations %}
+          <li>{{ rec }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Tips Card -->
+    {% if tips %}
+    <div class="p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-inner">
+      <h2 class="text-2xl font-bold text-accent mb-3">Tips</h2>
+      <ul class="list-disc list-inside text-gray-800 dark:text-gray-200">
+        {% for tip in tips %}
+          <li>{{ tip }}</li>
+        {% endfor %}
+      </ul>
+    </div>
     {% endif %}
   </div>
 
-  <script>
-    // Auto-refresh every 10 seconds
-    setInterval(() => location.reload(), 10000);
-  </script>
+</div>
 
+<script>
+  // Dark/Light theme toggle
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  function updateThemeIcon() {
+    if(html.classList.contains('dark')){
+      themeIcon.classList.replace('fa-sun','fa-moon');
+    } else {
+      themeIcon.classList.replace('fa-moon','fa-sun');
+    }
+  }
+  updateThemeIcon();
+  themeToggle.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    updateThemeIcon();
+  });
+</script>
 </body>
 </html>

@@ -35,12 +35,12 @@
 
   </style>
 </head>
-<body class="bg-blue-950 text-white h-screen overflow-hidden">
+<body class="bg-gray-900 text-white h-screen overflow-hidden">
 
   <div class="flex h-full">
 
   <!-- Left Sidebar -->
-  <div class="hidden md:flex flex-col w-64 bg-blue-900 h-full">
+  <div class="hidden md:flex flex-col w-64 h-full">
     {% include 'sidebar.html' %}
   </div>
 
@@ -48,18 +48,18 @@
   <div class="flex-1 flex flex-col relative max-w-[900px] mx-auto">
 
     <!-- Header -->
-    <div class="fixed top-0 left-0 right-0 md:left-64 md:right-72 bg-blue-800 z-30 p-4 flex justify-between items-center shadow">
+    <div class="fixed top-0 left-0 right-0 md:left-64 md:right-72 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 z-30 p-4 flex justify-between items-center shadow">
       <div class="flex items-center gap-2">
         <h1 class="font-bold text-xl">Soil Expert Chat</h1>
-        <button class="lg:hidden px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded">
+        <button class="lg:hidden px-2 py-1 bg-gray-600 hover:bg-[#474E68] rounded">
           <a href="{% url 'soildata:dashboard' %}">Back</a>
         </button>
       </div>
       <div class="flex items-center gap-2">
-        <button id="toggle-history" class="md:hidden px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded">
+        <button id="toggle-history" class="md:hidden px-2 py-1 bg-gray-600 hover:bg-[#474E68] rounded">
           <i class="fa fa-history"></i>
         </button>
-        <button id="new-chat" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded">New Chat</button>
+        <button id="new-chat" class="px-3 py-1 bg-gray-600 hover:bg-[#474E68] rounded">New Chat</button>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
     <div id="chat-box" class="flex-1 mt-16 mb-20 overflow-y-auto">
       {% for message in messages %}
       <div id="msg-{{ message.id }}" class="flex {% if message.sender == 'user' %}justify-end{% else %}justify-start{% endif %} mb-2 fade-slide">
-        <div class="px-4 py-2 rounded-lg max-w-xs {% if message.sender == 'user' %}bg-blue-700{% else %}bg-blue-600 text-white{% endif %} break-words">
+        <div class="px-4 py-2 rounded-lg max-w-xs {% if message.sender == 'user' %}bg-[#3C467B]{% else %}bg-[#50589C] text-white{% endif %} break-words">
           {{ message.text }}
         </div>
       </div>
@@ -75,22 +75,22 @@
     </div>
 
     <!-- Input Bar -->
-    <form id="chat-form" class="fixed bottom-0 left-0 right-0 md:left-64 md:right-72 flex p-2 bg-blue-800 border-t border-blue-700 z-30">
+    <form id="chat-form" class="fixed bottom-0 left-0 right-0 md:left-64 md:right-72 flex p-2 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-t border-gray-700 z-30">
       {% csrf_token %}
-      <input id="chat-input" type="text" name="message" placeholder="Type your question..." class="flex-1 p-3 bg-blue-900 text-white focus:outline-none rounded-l" />
-      <button type="submit" class="px-4 bg-blue-600 hover:bg-blue-700 rounded-r">Send</button>
+      <input id="chat-input" type="text" name="message" placeholder="Type your question..." class="flex-1 p-3 bg-gray-700 text-white focus:outline-none rounded-l" />
+      <button type="submit" class="px-4 bg-gray-600 hover:bg-[#474E68] rounded-r">Send</button>
     </form>
 
   </div>
 
   <!-- Right History Panel -->
-  <div id="chat-history" class="hidden md:flex flex-col w-72 bg-blue-800 p-4 overflow-y-auto h-full">
+  <div id="chat-history" class="hidden md:flex flex-col w-72 bg-[#27374d] p-4 overflow-y-auto h-full">
     <h2 class="font-bold mb-4 text-lg flex items-center gap-2">
       <i class="fa fa-history"></i> Chat History
     </h2>
     <ul class="space-y-2">
       {% for session_item in history %}
-      <li class="flex items-center gap-2 p-2 rounded bg-blue-700 cursor-pointer hover:bg-blue-600 break-words" onclick="window.location='{% url 'chat' session_item.id %}'">
+      <li class="flex items-center gap-2 p-2 rounded bg-[#3a506b] cursor-pointer hover:bg-gray-700 break-words" onclick="window.location='{% url 'chat' session_item.id %}'">
         <i class="fa fa-comment text-white"></i>
         <span>{{ session_item.title|truncatechars:50 }}</span>
       </li>
@@ -125,7 +125,7 @@
       const div = document.createElement("div");
       div.id = "msg-" + msg.id;
       div.className = "flex " + (msg.sender=="user"?"justify-end":"justify-start") + " mb-2 fade-slide";
-      div.innerHTML = `<div class="px-4 py-2 rounded-lg max-w-xs break-words ${msg.sender=="user"?"bg-blue-700":"bg-blue-600 text-white"}">${msg.text}</div>`;
+      div.innerHTML = `<div class="px-4 py-2 rounded-lg max-w-xs break-words ${msg.sender=="user"?"bg-[#3C467B]" : "bg-[#50589C] text-white"}">${msg.text}</div>`;
       chatBox.appendChild(div);
       scrollBottom();
     }
@@ -135,7 +135,7 @@
       ul.innerHTML = "";
       history.forEach((session) => {
         const li = document.createElement("li");
-        li.className = "flex items-center gap-2 p-2 rounded bg-blue-700 cursor-pointer hover:bg-blue-600 break-words";
+        li.className = "flex items-center gap-2 p-2 rounded bg-[#3a506b] cursor-pointer hover:bg-[#3a506b] break-words";
         li.innerHTML = `<i class="fa fa-comment text-white"></i> <span>${session.title.length>50 ? session.title.substring(0,50)+"..." : session.title}</span>`;
         li.onclick = () => { window.location = `/chat/${session.id}/`; };
         ul.appendChild(li);

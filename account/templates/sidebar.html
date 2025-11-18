@@ -1,100 +1,146 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar | Soil Monitor</title>
+  <title>Soil Monitor</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body class="bg-gray-100 dark:bg-[#1e293b] text-gray-900 dark:text-gray-100">
+<body class="transition-colors duration-500 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
 
-<!-- Sidebar / Navbar -->
-<nav class="fixed top-0 left-0 w-full md:w-64 h-16 md:h-screen bg-[#27374d] text-white flex flex-col shadow-lg z-50 transition-all">
+<!-- Top Bar -->
+<header class="fixed top-0 left-0 w-full bg-white dark:bg-[#27374d] shadow-2xl z-50 transition-all">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
 
-  <!-- Mobile Top Bar -->
-  <div class="flex items-center justify-between md:hidden px-4 h-16 bg-[#27374d] shadow">
-    <div class="text-2xl font-bold text-blue-300">Soil Monitor</div>
-    <button id="mobileMenuBtn" class="text-2xl focus:outline-none">
-      <i class="fa fa-bars"></i>
-    </button>
-  </div>
+      <!-- Left: Logo + Mobile Menu -->
+      <div class="flex items-center space-x-2">
+        <button id="mobileMenuBtn" class="md:hidden px-4 transition transform hover:-translate-y-0.5">
+          <i class="fas fa-bars text-gray-900 dark:text-white text-lg"></i>
+        </button>
+        <img src="{% static 'media/logo.png' %}" alt="Logo" class="h-12 w-12 rounded-full shadow-lg">
+        <span class="inline text-2xl font-bold text-blue-600 dark:text-blue-400">Soil Monitor</span>
+      </div>
 
-  <!-- Sidebar Menu -->
-  <div id="sidebarMenu" class="fixed md:relative top-16 lg:top-0 left-0 h-full w-64 bg-[#27374d] transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto z-40 md:z-auto">
-    <div class="text-center py-6 border-b border-[#3a506b] md:block hidden">
-      <span class="text-2xl font-bold text-blue-300">Soil Monitor</span>
+      <!-- Right: Theme Toggle + User Info -->
+      <div class="flex items-center space-x-4">
+
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="p-2 transition transform hover:-translate-y-0.5">
+          <i id="themeIcon" class="fas fa-sun text-yellow-400 text-lg"></i>
+        </button>
+
+        <!-- User Profile -->
+        <div class="flex items-center space-x-2 bg-white dark:bg-gray-700 rounded-full shadow-md px-2 py-1 hover:shadow-xl transition transform hover:-translate-y-0.5 cursor-pointer">
+          <img src="{{ profile.profile_pic.url }}" alt="Profile Pic" class="h-10 w-10 rounded-full object-cover border-2 border-blue-500 shadow-md">
+          <span class="font-medium text-gray-900 dark:text-gray-100">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+        </div>
+
+      </div>
     </div>
-
-    <ul class="flex-1 flex flex-col mt-2 space-y-1">
-      
-      <!-- Dashboard -->
-      <li class="{% if request.resolver_match.namespace == 'account' and request.resolver_match.url_name == 'dashboard' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'soildata:dashboard' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-tachometer text-blue-300"></i> Dashboard
-        </a>
-      </li>
-
-      <!-- Soil Moisture -->
-      <li class="{% if request.resolver_match.namespace == 'soildata' and request.resolver_match.url_name == 'soil_moisture' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'soildata:soil_moisture' %}" class="flex items-center gap-3 px-8 py-2 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-leaf text-green-400"></i> Soil Moisture
-        </a>
-      </li>
-
-      <!-- Alerts -->
-      <li class="{% if request.resolver_match.namespace == 'soildata' and request.resolver_match.url_name == 'alerts' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'soildata:alerts' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-bell text-yellow-400"></i> Alerts
-        </a>
-      </li>
-
-      <!-- Crop Advisor -->
-      <li class="{% if request.resolver_match.namespace == 'soildata' and request.resolver_match.url_name == 'crop_advisor' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'soildata:crop_advisor' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-leaf text-green-400"></i> Crop Advisor
-        </a>
-      </li>
-
-      <!-- ChatBot -->
-      <li class="{% if request.resolver_match.namespace == 'chat' and request.resolver_match.url_name == 'chat_new' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'chat_new' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-comments text-pink-400"></i> ChatBot Assistance
-        </a>
-      </li>
-
-      <!-- Settings -->
-      <li class="{% if request.resolver_match.namespace == 'account' and request.resolver_match.url_name == 'settingpage' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'account:settingpage' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-cog text-gray-300"></i> Settings
-        </a>
-      </li>
-
-      <!-- Profile -->
-      <li class="{% if request.resolver_match.namespace == 'account' and request.resolver_match.url_name == 'profilepage' %}bg-[#3a506b] font-semibold{% endif %} rounded-lg">
-        <a href="{% url 'account:profilepage' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-[#3a506b] transition rounded-lg">
-          <i class="fa fa-user text-gray-300"></i> Profile
-        </a>
-      </li>
-
-      <!-- Logout -->
-      <li>
-        <a href="{% url 'account:logout' %}" class="flex items-center gap-3 px-5 py-3 hover:bg-red-600 hover:text-white transition rounded-lg">
-          <i class="fa fa-sign-out text-red-400"></i> Logout
-        </a>
-      </li>
-
-    </ul>
   </div>
-</nav>
+</header>
 
+<!-- Sidebar -->
+<aside id="sidebarMenu" class="fixed top-16 left-0 w-64 h-full bg-gray-100 dark:bg-[#27374d] text-gray-900 dark:text-white shadow-2xl z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+  <ul class="flex flex-col mt-4 space-y-1">
+
+    <!-- Dashboard -->
+    <li>
+      <a href="{% url 'soildata:dashboard' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'dashboard' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-tachometer-alt text-blue-300"></i> Dashboard
+      </a>
+    </li>
+
+    <!-- Soil Moisture -->
+    <li>
+      <a href="{% url 'soildata:soil_moisture' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'soil_moisture' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-leaf text-green-400"></i> Soil Moisture
+      </a>
+    </li>
+
+    <!-- Alerts -->
+    <li>
+      <a href="{% url 'soildata:alerts' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'alerts' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-bell text-yellow-400"></i> Alerts
+      </a>
+    </li>
+
+    <!-- Soil Analyzer -->
+    <li>
+      <a href="{% url 'soilvision:soil_upload' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'soil_upload' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-seedling text-green-500"></i> Soil Analyzer
+      </a>
+    </li>
+
+    <!-- Crop Advisor -->
+    <li>
+      <a href="{% url 'soildata:crop_advisor' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'crop_advisor' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa-solid fa-lightbulb text-green-500 dark:text-green-300"></i> Crop Advisor
+      </a>
+    </li>
+
+    <!-- ChatBot -->
+    <li>
+      <a href="{% url 'chat_new' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'chat_new' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-comments text-pink-500"></i> ChatBot
+      </a>
+    </li>
+
+    <!-- Settings -->
+    <li>
+      <a href="{% url 'account:settingpage' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'settingpage' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-cog text-gray-500"></i> Settings
+      </a>
+    </li>
+
+    <!-- Profile -->
+    <li>
+      <a href="{% url 'account:profilepage' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg transition-all hover:bg-[#3a506b] {% if request.resolver_match.url_name == 'profilepage' %}bg-[#3a506b] font-semibold{% endif %}">
+        <i class="fa fa-user text-gray-500"></i> Profile
+      </a>
+    </li>
+
+    <!-- Logout -->
+    <li>
+      <a href="{% url 'account:logout' %}" class="flex items-center gap-3 px-5 py-3 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-all">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </a>
+    </li>
+
+  </ul>
+</aside>
+
+<!-- Scripts -->
 <script>
+  // Theme toggle
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+
+  function updateThemeIcon() {
+    if(html.classList.contains('dark')) {
+      themeIcon.classList.replace('fa-sun','fa-moon');
+    } else {
+      themeIcon.classList.replace('fa-moon','fa-sun');
+    }
+  }
+  updateThemeIcon();
+
+  themeToggle.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    updateThemeIcon();
+  });
+
+  // Mobile sidebar toggle
   const mobileBtn = document.getElementById('mobileMenuBtn');
   const sidebar = document.getElementById('sidebarMenu');
 
   mobileBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('-translate-x-full'); // slide in/out
+    sidebar.classList.toggle('-translate-x-full');
   });
 </script>
 

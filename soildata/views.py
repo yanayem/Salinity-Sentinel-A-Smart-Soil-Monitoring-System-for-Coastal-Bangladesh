@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from .models import Device, DeviceReading
 from django.http import JsonResponse
+from soilcore.models import SoilType
 
 
 
@@ -15,25 +16,27 @@ from django.http import JsonResponse
 # -------------------------
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+import json
 
 @login_required
 def dashboard(request):
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
 
-    # Latest 10 moisture readings
-    readings = DeviceReading.objects.filter(device__user=user).order_by('-updated_at')[:10]
+    # Latest 7 moisture readings
+    readings = DeviceReading.objects.filter(device__user=user).order_by('-updated_at')[:7]
 
     # For Chart.js (reverse to show oldest -> newest)
     readings_chart = readings[::-1]
 
-    chart_labels = [r.updated_at.strftime("%H:%M") for r in readings_chart]
-    chart_data = [r.moisture for r in readings_chart]
+    chart_labels = json.dumps([r.updated_at.strftime("%H:%M") for r in readings[::-1]])
+    chart_data = json.dumps([r.moisture for r in readings[::-1]])
 
     return render(request, "dashboard.html", {
         "user": user,
         "profile": profile,
-        "readings": readings,
+        "readings": readings[::-1],  
         "chart_labels": chart_labels,
         "chart_data": chart_data
     })
@@ -46,7 +49,7 @@ def soil_moisture(request):
     device = Device.objects.filter(user=request.user, is_active=True).first()
     if device:
         readings = DeviceReading.objects.filter(device=device).order_by('-updated_at')[:50]
-        # Convert updated_at to localtime in view
+        
         for r in readings:
             r.local_time = timezone.localtime(r.updated_at)
     else:
@@ -113,24 +116,50 @@ def alerts(request):
 
 @login_required
 def crop_advisor(request):
-    device = Device.objects.filter(user=request.user, is_active=True).first()
-    suggestion = None
-    moisture = None
+    recommendations = []
+    tips = []
+    ph_value = None
+    soil_type_input = ""
+    location_input = ""
 
-    if device:
-        reading = DeviceReading.objects.filter(device=device).order_by('-updated_at').first()
-        if reading:
-            moisture = reading.moisture
-            if moisture <= 30:
-                suggestion = ["Cactus 🌵", "Aloe Vera 🌿", "Millet 🌾"]
-            elif 31 <= moisture <= 60:
-                suggestion = ["Wheat 🌾", "Corn 🌽", "Tomato 🍅"]
-            elif 61 <= moisture <= 80:
-                suggestion = ["Rice 🌾", "Sugarcane 🍬", "Banana 🍌"]
-            else:
-                suggestion = ["Water Lily 🌸", "Taro 🌿", "Bamboo 🎋"]
-    
-    return render(request, "crop_advisor.html", {
-        "moisture": moisture,
-        "suggestion": suggestion,
-    })
+    if request.method == "POST":
+        # Get values from the form
+        ph_raw = request.POST.get("ph")
+        soil_type_input = request.POST.get("soil_type", "").strip()
+        location_input = request.POST.get("location", "").strip()
+
+        try:
+            ph_value = float(ph_raw)
+        except (ValueError, TypeError):
+            ph_value = None
+
+        if ph_value is not None:
+            soils = SoilType.objects.filter(ph_min__lte=ph_value, ph_max__gte=ph_value)
+
+            if soil_type_input:
+                soils = soils.filter(name__icontains=soil_type_input)
+
+            if location_input:
+                soils = soils.filter(location__icontains=location_input)
+
+            for soil in soils:
+                if soil.suitable_crops:
+                    crops_list = [c.strip() for c in soil.suitable_crops.split(",")]
+                    recommendations.extend(crops_list)
+
+                # Tips: you can customize what tips to show
+                if soil.description:
+                    tips.append(soil.description)
+
+            # Remove duplicates
+            recommendations = list(set(recommendations))
+            tips = list(set(tips))
+
+    context = {
+        "recommendations": recommendations,
+        "tips": tips,
+        "ph_value": ph_value,
+        "soil_type_input": soil_type_input,
+        "location_input": location_input,
+    }
+    return render(request, "crop_advisor.html", context)

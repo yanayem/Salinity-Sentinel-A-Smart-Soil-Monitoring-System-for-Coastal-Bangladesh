@@ -2,62 +2,66 @@ from django.shortcuts import render
 from django.contrib import messages
 import requests
 import datetime
-
+import random
 
 def weatherpage(request):
-   
-    if 'city' in request.POST:
-         city = request.POST['city']
-    else:
-         city = 'indore'     
-    
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid= 963804a07802e5371e2a2bd19f6a7afb'
-    PARAMS = {'units':'metric'}
+    city = request.POST.get('city', 'Indore')
 
-    API_KEY =  ' AIzaSyAPFSLqV5bk9dJ3etShxeSSiQ_Rc2zk8OI  '
+    # OpenWeather API
+    OPENWEATHER_API_KEY = '963804a07802e5371e2a2bd19f6a7afb'
+    weather_url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OPENWEATHER_API_KEY}&units=metric'
 
-    SEARCH_ENGINE_ID = '130921f9bf8ac4610'
-     
-    query = city + " 1920x1080"
-    page = 1
-    start = (page - 1) * 10 + 1
-    searchType = 'image'
-    city_url = f"https://www.googleapis.com/customsearch/v1?key={API_KEY}&cx={SEARCH_ENGINE_ID}&q={query}&start={start}&searchType={searchType}&imgSize=xlarge"
+    # Unsplash API
+    UNSPLASH_ACCESS_KEY = '1p8c8r_JXHlH5-CStbJgX5JNheF7_7YanrgSftDbZX8'
+    unsplash_url = f'https://api.unsplash.com/photos/random?query={city}&orientation=landscape&client_id={UNSPLASH_ACCESS_KEY}'
 
-    # Safe image fetch
+    # Default values
+    temp = 25
+    humidity = 50
+    rain = 0
+    description = 'clear sky'
+    icon = '01d'
+    image_url = '/static/media/Untitled.png'
+    exception_occurred = False
+
+    # Fetch city image from Unsplash
     try:
-        data = requests.get(city_url).json()
-        search_items = data.get("items")
-        if search_items and len(search_items) > 1:
-            image_url = search_items[1]['link']
-        else:
-            image_url = "/static/media/Untitled.png"
+        data_img = requests.get(unsplash_url).json()
+        image_url = data_img['urls']['regular']
     except:
-        image_url = "/static/media/Untitled.png"
-    
+        image_url = '/static/media/Untitled.png'
 
+    # Fetch weather data
     try:
-          
-          data = requests.get(url,params=PARAMS).json()
-          description = data['weather'][0]['description']
-          icon = data['weather'][0]['icon']
-          temp = data['main']['temp']
-          day = datetime.date.today()
+        data = requests.get(weather_url).json()
+        if data.get('cod') == 200:
+            temp = data['main']['temp']
+            humidity = data['main']['humidity']
+            description = data['weather'][0]['description']
+            icon = data['weather'][0]['icon']
+            rain = data.get('rain', {}).get('1h', 0)
+        else:
+            exception_occurred = True
+            messages.error(request, 'City not found in Weather API')
+    except:
+        exception_occurred = True
+        messages.error(request, 'Error fetching Weather API')
 
-          return render(request,'weatherapp/index.html' , {'description':description , 'icon':icon ,'temp':temp , 'day':day , 'city':city , 'exception_occurred':False ,'image_url':image_url})
-    
-    except KeyError:
-          exception_occurred = True
-          messages.error(request,'Entered data is not available to API')   
-          # city = 'indore'
-          # data = requests.get(url,params=PARAMS).json()
-          
-          # description = data['weather'][0]['description']
-          # icon = data['weather'][0]['icon']
-          # temp = data['main']['temp']
-          day = datetime.date.today()
+    # Generate rain drops
+    rain_drops = [random.randint(0, 100) for _ in range(50)]
+    day = datetime.date.today()
 
-          return render(request,'weather.html' ,{'description':'clear sky', 'icon':'01d'  ,'temp':25 , 'day':day , 'city':'indore' , 'exception_occurred':exception_occurred } )
-               
-    
-    
+    context = {
+        'city': city,
+        'temp': temp,
+        'humidity': humidity,
+        'rain': rain,
+        'description': description,
+        'icon': icon,
+        'day': day,
+        'image_url': image_url,
+        'exception_occurred': exception_occurred,
+        'rain_drops': rain_drops,
+    }
+
+    return render(request, 'weather.html', context)

@@ -1,0 +1,10 @@
+from soil_cnn_model import create_model
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+train_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+train_gen = train_datagen.flow_from_directory('dataset/', target_size=(128,128), batch_size=32, subset='training')
+val_gen = train_datagen.flow_from_directory('dataset/', target_size=(128,128), batch_size=32, subset='validation')
+
+model = create_model()
+model.fit(train_gen, validation_data=val_gen, epochs=25)
+model.save('soil_model.h5')

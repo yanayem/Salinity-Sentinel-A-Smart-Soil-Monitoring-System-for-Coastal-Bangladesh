@@ -1,10 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Salinity Sentinel</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -20,18 +22,21 @@
       },
     };
   </script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
 </head>
-<body class="bg-slate-900 text-slate-100 transition-colors duration-500">
+<body class="bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-500">
 
   <!-- Navbar -->
-  <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-slate-800/90 backdrop-blur-md">
+  <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-gray-200 dark:bg-slate-800/90 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
 
         <!-- Logo -->
         <div class="flex items-center gap-3">
           <img src="/static/media/logo.png" alt="logo" class="w-10 h-10 object-cover">
-          <span class="font-bold text-xl text-slate-100">
+          <span class="font-bold text-xl text-gray-900 dark:text-slate-100">
             Salinity <span class="text-accent">Sentinel</span>
           </span>
         </div>
@@ -39,31 +44,39 @@
         <!-- Desktop Menu -->
         <div class="hidden md:flex flex-1 justify-center items-center gap-10 relative">
           <ul class="flex gap-10">
-            <li><a href="{% url 'homepage' %}" class="nav-link relative text-slate-100">Home</a></li>
-            <li><a href="{% url 'soil_types' %}" class="nav-link relative text-slate-100">Soil Type</a></li>
-            <li><a href="{% url 'weatherpage' %}" class="nav-link relative text-slate-100">Weather</a></li>
-            <li><a href="{% url 'aboutpage' %}" class="nav-link relative text-slate-100">About Us</a></li>
+            <li><a href="{% url 'homepage' %}" class="nav-link relative text-gray-900 dark:text-slate-100">Home</a></li>
+            <li><a href="{% url 'soil_types' %}" class="nav-link relative text-gray-900 dark:text-slate-100">Soil Type</a></li>
+            <li><a href="{% url 'weatherpage' %}" class="nav-link relative text-gray-900 dark:text-slate-100">Weather</a></li>
+            <li><a href="{% url 'aboutpage' %}" class="nav-link relative text-gray-900 dark:text-slate-100">About Us</a></li>
           </ul>
         </div>
 
-        <!-- Right side buttons -->
-        <div class="hidden md:flex justify-end gap-3">
+        <!-- Right side buttons + Theme Toggle -->
+        <div class="hidden md:flex justify-end items-center gap-3">
           <a href="{% url 'account:login' %}?mode=login" class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/80 transition">Login</a>
           <a href="{% url 'account:login' %}?mode=signup" class="px-4 py-2 rounded-lg bg-secondary text-white hover:bg-secondary/80 transition">Sign Up</a>
+          
+          <!-- Theme Toggle Button -->
+          <button id="themeToggle" class="ml-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-yellow-400 transition hover:shadow-md">
+            <i id="themeIcon" class="fas fa-sun"></i>
+          </button>
         </div>
 
         <!-- Mobile Menu Button -->
         <div class="md:hidden flex items-center gap-2">
+          <button id="themeToggleMobile" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-yellow-400 transition hover:shadow-md">
+            <i id="themeIconMobile" class="fas fa-sun"></i>
+          </button>
           <button id="mobileMenuBtn" class="text-2xl focus:outline-none">&#9776;</button>
         </div>
       </div>
 
       <!-- Mobile Links -->
-      <div id="mobileMenu" class="hidden md:hidden mt-2 flex flex-col gap-2 bg-slate-800/90 rounded-lg shadow-lg p-4">
-        <a href="{% url 'homepage' %}" class="mobile-link block py-2 px-3 rounded transition text-slate-100 hover:bg-primary/40">Home</a>
-        <a href="{% url 'soil_types' %}" class="mobile-link block py-2 px-3 rounded transition text-slate-100 hover:bg-primary/40">Soil Type</a>
-        <a href="{% url 'weatherpage' %}" class="mobile-link block py-2 px-3 rounded transition text-slate-100 hover:bg-primary/40">Weather</a>
-        <a href="{% url 'aboutpage' %}" class="mobile-link block py-2 px-3 rounded transition text-slate-100 hover:bg-primary/40">About Us</a>
+      <div id="mobileMenu" class="hidden md:hidden mt-2 flex flex-col gap-2 bg-gray-200 dark:bg-slate-800/90 rounded-lg shadow-lg p-4">
+        <a href="{% url 'homepage' %}" class="mobile-link block py-2 px-3 rounded transition text-gray-900 dark:text-slate-100 hover:bg-[#799EFF]">Home</a>
+        <a href="{% url 'soil_types' %}" class="mobile-link block py-2 px-3 rounded transition text-gray-900 dark:text-slate-100 hover:bg-[#799EFF]">Soil Type</a>
+        <a href="{% url 'weatherpage' %}" class="mobile-link block py-2 px-3 rounded transition text-gray-900 dark:text-slate-100 hover:bg-[#799EFF]">Weather</a>
+        <a href="{% url 'aboutpage' %}" class="mobile-link block py-2 px-3 rounded transition text-gray-900 dark:text-slate-100 hover:bg-[#799EFF]">About Us</a>
         <div class="flex gap-3 mt-2">
           <a href="{% url 'account:login' %}?mode=login" class="flex-1 text-center px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/80 transition">Login</a>
           <a href="{% url 'account:login' %}?mode=signup" class="flex-1 text-center px-4 py-2 rounded-lg bg-secondary text-white hover:bg-secondary/80 transition">Sign Up</a>
@@ -72,99 +85,80 @@
     </div>
   </nav>
 
-  
 <script>
   const html = document.documentElement;
 
-  // Colors
-  const activeColor = 'after:bg-accent';       // normal active underline
-  const hoverColor = 'after:bg-primary';       // hover underline
+  // Desktop + Mobile Theme Toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const themeToggleMobile = document.getElementById('themeToggleMobile');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeIconMobile = document.getElementById('themeIconMobile');
 
-  // =========================
-  // Desktop Nav Underline
-  // =========================
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.add(
-      'relative',
-      'after:absolute',
-      'after:left-0',
-      'after:-bottom-1',
-      'after:h-0.5',
-      'after:transition-all',
-      'after:duration-300',
-      activeColor
-    );
+  // Initialize theme from localStorage
+  if(localStorage.theme === 'dark') html.classList.add('dark');
+  updateThemeIcons();
 
-    const isActive = link.href === window.location.href;
-
-    if(isActive) {
-      link.classList.add('after:w-full');
-      link.dataset.active = "true";
+  function updateThemeIcons(){
+    if(html.classList.contains('dark')){
+      themeIcon.classList.replace('fa-sun','fa-moon');
+      themeIconMobile.classList.replace('fa-sun','fa-moon');
     } else {
-      link.classList.add('after:w-0');
-      link.dataset.active = "false";
+      themeIcon.classList.replace('fa-moon','fa-sun');
+      themeIconMobile.classList.replace('fa-moon','fa-sun');
+    }
+  }
+
+  function toggleTheme(){
+    html.classList.toggle('dark');
+    localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+    updateThemeIcons();
+  }
+
+  themeToggle.addEventListener('click', toggleTheme);
+  themeToggleMobile.addEventListener('click', toggleTheme);
+
+  // =========================
+  // Nav Underline Animation
+  // =========================
+  const activeColor = 'after:bg-accent';
+  const hoverColor = 'after:bg-primary';
+
+  function setupLinks(selector){
+    document.querySelectorAll(selector).forEach(link => {
+      link.classList.add(
+        'relative','after:absolute','after:left-0','after:-bottom-1',
+        'after:h-0.5','after:transition-all','after:duration-300', activeColor
+      );
+
+      const isActive = link.href === window.location.href;
+      if(isActive){
+        link.classList.add('after:w-full');
+        link.dataset.active = "true";
+      } else {
+        link.classList.add('after:w-0');
+        link.dataset.active = "false";
+
+        link.addEventListener('mouseenter', () => {
+          link.classList.add('after:w-full', hoverColor);
+          link.classList.remove(activeColor);
+        });
+        link.addEventListener('mouseleave', () => {
+          link.classList.remove('after:w-full', hoverColor);
+          link.classList.add(activeColor);
+        });
+      }
 
       link.addEventListener('mouseenter', () => {
-        link.classList.add('after:w-full', hoverColor);
-        link.classList.remove(activeColor);
+        if(link.dataset.active === "true") link.classList.remove('after:w-full');
       });
       link.addEventListener('mouseleave', () => {
-        link.classList.remove('after:w-full', hoverColor);
-        link.classList.add(activeColor);
+        if(link.dataset.active === "true") link.classList.add('after:w-full');
       });
-    }
-
-    // Active link hover hides underline
-    link.addEventListener('mouseenter', () => {
-      if(link.dataset.active === "true") link.classList.remove('after:w-full');
     });
-    link.addEventListener('mouseleave', () => {
-      if(link.dataset.active === "true") link.classList.add('after:w-full');
-    });
-  });
+  }
 
-  // =========================
-  // Mobile Nav Underline
-  // =========================
-  document.querySelectorAll('.mobile-link').forEach(link => {
-    link.classList.add(
-      'relative',
-      'after:absolute',
-      'after:left-0',
-      'after:-bottom-1',
-      'after:h-0.5',
-      'after:transition-all',
-      'after:duration-300',
-      activeColor
-    );
-
-    const isActive = link.href === window.location.href;
-
-    if(isActive){
-      link.classList.add('after:w-full');
-      link.dataset.active = "true";
-    } else {
-      link.classList.add('after:w-0');
-      link.dataset.active = "false";
-
-      link.addEventListener('mouseenter', () => {
-        link.classList.add('after:w-full', hoverColor);
-        link.classList.remove(activeColor);
-      });
-      link.addEventListener('mouseleave', () => {
-        link.classList.remove('after:w-full', hoverColor);
-        link.classList.add(activeColor);
-      });
-    }
-
-    // Active link hover hides underline
-    link.addEventListener('mouseenter', () => {
-      if(link.dataset.active === "true") link.classList.remove('after:w-full');
-    });
-    link.addEventListener('mouseleave', () => {
-      if(link.dataset.active === "true") link.classList.add('after:w-full');
-    });
-  });
+  setupLinks('.nav-link');
+  setupLinks('.mobile-link');
 
   // =========================
   // Mobile menu toggle
@@ -174,15 +168,14 @@
   mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
   // =========================
-  // Navbar scroll shadow effect
+  // Navbar scroll shadow
   // =========================
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
-    if(window.scrollY > 10) {
-      navbar.classList.add('shadow-lg','bg-slate-800/90');
+    if(window.scrollY > 10){
+      navbar.classList.add('shadow-lg','bg-gray-200','dark:bg-slate-800/90');
     } else {
       navbar.classList.remove('shadow-lg');
-      navbar.classList.add('bg-slate-800/90');
     }
   });
 </script>

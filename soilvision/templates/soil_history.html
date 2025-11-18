@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoilVision - History</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: "class" }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-all duration-500">
+
+<div class="min-h-screen flex flex-col items-center p-4">
+
+  <h1 class="text-4xl font-bold mb-6 animate-pulse text-green-600 dark:text-green-400">🌱 SoilVision History</h1>
+
+  <a href="{% url 'soilvision:soil_upload' %}" class="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300">⬅ Back to Upload</a>
+
+  {% if history %}
+  <div class="overflow-x-auto w-full max-w-5xl">
+    <table class="min-w-full bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden">
+      <thead class="bg-gray-200 dark:bg-gray-700">
+        <tr>
+          <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Image</th>
+          <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Soil Type</th>
+          <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Confidence</th>
+          <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in history %}
+        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200">
+          <td class="py-2 px-4">
+            <img src="{{ entry.image.url }}" alt="Soil Image" class="w-20 h-20 object-cover rounded-lg shadow-sm">
+          </td>
+          <td class="py-2 px-4 font-medium">{{ entry.predicted_soil_type }}</td>
+          <td class="py-2 px-4">{{ entry.confidence|floatformat:2 }}%</td>
+          <td class="py-2 px-4">{{ entry.created_at|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="text-gray-600 dark:text-gray-300 mt-4 text-lg animate-pulse">No predictions yet. Upload an image first! 🌱</p>
+  {% endif %}
+
+</div>
+
+<!-- Theme Toggle Button with Sun/Moon -->
+<div class="fixed top-4 right-4">
+  <button id="theme-toggle" class="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition-all duration-300 flex items-center justify-center">
+    <!-- Icons -->
+    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.364-7.364l-1.414 1.414M6.05 17.95l-1.414 1.414M17.95 17.95l-1.414-1.414M6.05 6.05L4.636 7.464M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+    </svg>
+    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  const sunIcon = document.getElementById('sun-icon');
+  const moonIcon = document.getElementById('moon-icon');
+
+  // Initialize icons based on current theme
+  if(document.documentElement.classList.contains('dark')) {
+    sunIcon.classList.remove('hidden');
+    moonIcon.classList.add('hidden');
+  } else {
+    sunIcon.classList.add('hidden');
+    moonIcon.classList.remove('hidden');
+  }
+
+  btn.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    // Toggle icons
+    sunIcon.classList.toggle('hidden');
+    moonIcon.classList.toggle('hidden');
+  });
+</script>
+
+</body>
+</html>

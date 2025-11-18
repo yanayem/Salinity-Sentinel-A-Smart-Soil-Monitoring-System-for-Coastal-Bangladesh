@@ -5,13 +5,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import timedelta
-from django.http import JsonResponse, HttpResponse
-import json, io, zipfile
-
+from django.http import JsonResponse
 from .models import UserProfile
 from .forms import ProfilePicForm
-# Optional: if you track soil readings per user
 from soildata.models import DeviceReading
+import json
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 
 # -------------------------
 # LOGIN / SIGNUP
@@ -27,7 +28,7 @@ def loginsignuppage(request):
             login(request, user)
             messages.success(request, "✅ Logged in successfully!")
             
-            # Redirect safely to dashboard in soildata
+            
             next_url = request.GET.get("next", None)
             if not next_url:
                 next_url = "soildata:dashboard"
@@ -56,7 +57,6 @@ def loginsignuppage(request):
             messages.error(request, "⚠️ Username already taken!")
             mode = "signup"
         else:
-            # Create User and Profile
             user = User.objects.create_user(
                 username=username,
                 email=email,
@@ -92,19 +92,6 @@ def user_logout(request):
     return redirect("account:login")
 
 
-# -------------------------
-# PROFILE PAGE
-# -------------------------
-import json
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.http import JsonResponse
-from django.contrib.auth import logout
-from .models import UserProfile
-
-from soildata.models import  DeviceReading
-from .forms import ProfilePicForm  # your existing form
 
 # -------------------------
 # Profile page
@@ -114,7 +101,6 @@ def profilepage(request):
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
 
-    # Profile picture upload
     if request.method == "POST" and request.FILES.get("profile_pic"):
         form = ProfilePicForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -122,7 +108,6 @@ def profilepage(request):
             messages.success(request, "✅ Profile picture updated!")
             return redirect('account:profilepage')
 
-    # Latest soil readings
     readings = DeviceReading.objects.filter(device__user=user).order_by('-updated_at')[:10]
 
     return render(request, 'profile.html', {
@@ -139,7 +124,7 @@ def profilepage(request):
 def remove_profile_pic(request):
     if request.method == "POST":
         user_profile = UserProfile.objects.get(user=request.user)
-        user_profile.profile_pic.delete(save=True)  # delete file from storage
+        user_profile.profile_pic.delete(save=True)  
         user_profile.profile_pic = None
         user_profile.save()
         return JsonResponse({"status": "success"})
@@ -161,13 +146,13 @@ def update_account_info(request):
         user = request.user
         profile, _ = UserProfile.objects.get_or_create(user=user)
 
-        # Update full name
+        
         if full_name:
             parts = full_name.split(" ", 1)
             user.first_name = parts[0]
             user.last_name = parts[1] if len(parts) > 1 else ""
 
-        # Update email safely
+        
         if email and email != user.email:
             from datetime import timedelta
             from django.utils import timezone
@@ -223,13 +208,13 @@ def settingpage(request):
         phone = request.POST.get("phone_number", "").strip()
         location = request.POST.get("location", "").strip()
 
-        # Update full name
+       
         if full_name:
             parts = full_name.split(" ", 1)
             user.first_name = parts[0]
             user.last_name = parts[1] if len(parts) > 1 else ""
 
-        # Update email safely
+        
         if email and email != user.email:
             if profile.update_email(email):
                 messages.success(request, "✅ Email updated successfully!")
@@ -254,15 +239,12 @@ def settingpage(request):
 # -------------------------
 # DOWNLOAD USER DATA
 # -------------------------
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
 
 @login_required
 def download_user_data(request):
     user = request.user
     profile = getattr(user, "userprofile", None)
 
-    # PDF response
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{user.username}_data.pdf"'
 
@@ -294,6 +276,7 @@ def download_user_data(request):
 # -------------------------
 # DELETE ACCOUNT
 # -------------------------
+
 @login_required
 def delete_account(request):
     if request.method == "POST":

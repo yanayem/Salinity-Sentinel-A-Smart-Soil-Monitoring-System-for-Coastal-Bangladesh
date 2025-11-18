@@ -29,6 +29,9 @@ urlpatterns = [
 
     # Soil Data
     path('soildata/', include('soildata.urls', namespace='soildata')),
+    
+    #soil vision
+    path('soilvision/', include('soilvision.urls', namespace='soilvision')),
 
     # Chat
     path('chat/', include('chatApp.urls')),
