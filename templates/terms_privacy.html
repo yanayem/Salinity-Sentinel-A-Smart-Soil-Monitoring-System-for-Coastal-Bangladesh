@@ -1,104 +1,141 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Terms & Privacy | Soil Monitor</title>
-    <link rel="stylesheet" href="{% static 'css/terms_privacy.css' %}" />
-  </head>
-  <body>
-    <!-- Header / Logo -->
-    <header class="header">
-      <div class="logo">
-        <a href="{% url 'homepage' %}">
-          <img src="{% static 'media/logo.png' %}" alt="Soil Monitor Logo" />
-          <span>Soil Monitor</span>
-        </a>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms & Privacy | Soil Monitor</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            'soft-sky': '#E0F2FF',
+            'soft-sky-text': '#1E3A8A',
+            'dark-bg': '#1F2937',
+            'dark-text': '#E5E7EB',
+            'card-light': '#FFFFFF',
+            'card-dark': '#2D3748'
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+
+<body class="bg-soft-sky text-soft-sky-text dark:bg-dark-bg dark:text-dark-text transition-colors duration-300">
+
+<!-- HEADER -->
+<header class="w-full bg-soft-sky dark:bg-dark-bg shadow-md py-4 px-6 flex justify-between items-center transition-colors duration-300">
+  <a href="{% url 'homepage' %}" class="flex items-center gap-3">
+    <img src="{% static 'media/logo.png' %}" alt="Soil Monitor Logo" class="w-10 h-10 rounded-full">
+    <span class="text-xl font-bold text-soft-sky-text dark:text-dark-text">Soil Monitor</span>
+  </a>
+
+  <button id="theme-toggle" class="p-2 rounded-full bg-white dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+    <i id="theme-icon" class="fas fa-moon"></i>
+  </button>
+</header>
+
+<main class="max-w-5xl mx-auto p-6 md:p-12 space-y-6">
+
+  <!-- TERMS & CONDITIONS -->
+  <section class="space-y-3">
+    <h1 class="text-3xl font-bold text-soft-sky-text dark:text-dark-text">Terms & Conditions</h1>
+    <p class="text-blue-800 dark:text-gray-400"><strong>Effective Date:</strong> 2025-10-22</p>
+
+    <!-- Card -->
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden transition-colors duration-300">
+      <button class="w-full text-left px-6 py-4 flex justify-between items-center focus:outline-none toggle-card">
+        <span class="font-semibold text-soft-sky-text dark:text-dark-text">1. Introduction</span>
+        <i class="fas fa-chevron-down text-gray-600 dark:text-gray-300 transition-transform"></i>
+      </button>
+      <div class="px-6 py-4 text-blue-900 dark:text-gray-300 leading-relaxed hidden">
+        Welcome to Soil Monitor. By accessing or using our services, you agree to comply with these Terms & Conditions. These terms apply to all users, devices, and interactions with our platform.
       </div>
-    </header>
+    </div>
 
-    <main class="content-container">
-      <!-- Terms & Conditions -->
-      <section class="policy-section">
-        <h1>Terms & Conditions</h1>
-        <p><strong>Effective Date:</strong> 2025-10-22</p>
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden transition-colors duration-300">
+      <button class="w-full text-left px-6 py-4 flex justify-between items-center focus:outline-none toggle-card">
+        <span class="font-semibold text-soft-sky-text dark:text-dark-text">2. Use of Service</span>
+        <i class="fas fa-chevron-down text-gray-600 dark:text-gray-300 transition-transform"></i>
+      </button>
+      <div class="px-6 py-4 text-blue-900 dark:text-gray-300 leading-relaxed hidden">
+        Soil Monitor provides insights on soil parameters such as moisture, pH, temperature, and humidity. Users must provide accurate and complete information when registering or using devices.
+      </div>
+    </div>
 
-        <h2>1. Introduction</h2>
-        <p>
-          Welcome to Soil Monitor. By accessing or using our services, you agree
-          to these Terms & Conditions.
-        </p>
+    <!-- Add more cards similarly for other sections... -->
+  </section>
 
-        <h2>2. Use of Service</h2>
-        <p>
-          Soil Monitor allows you to monitor soil parameters like moisture, pH,
-          temperature, and humidity. Users must provide accurate information.
-        </p>
+  <!-- PRIVACY POLICY -->
+  <section class="space-y-3 mt-8">
+    <h1 class="text-3xl font-bold text-soft-sky-text dark:text-dark-text">Privacy Policy</h1>
+    <p class="text-blue-800 dark:text-gray-400"><strong>Effective Date:</strong> 2025-10-22</p>
 
-        <h2>3. User Account</h2>
-        <p>
-          You are responsible for maintaining confidentiality of your login
-          credentials.
-        </p>
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden transition-colors duration-300">
+      <button class="w-full text-left px-6 py-4 flex justify-between items-center focus:outline-none toggle-card">
+        <span class="font-semibold text-soft-sky-text dark:text-dark-text">1. Information We Collect</span>
+        <i class="fas fa-chevron-down text-gray-600 dark:text-gray-300 transition-transform"></i>
+      </button>
+      <div class="px-6 py-4 text-blue-900 dark:text-gray-300 leading-relaxed hidden">
+        Personal information includes name, email, phone, and location. Device data includes soil readings, timestamps, and device health. Usage data includes pages visited, alerts set, and interaction logs.
+      </div>
+    </div>
 
-        <h2>4. Device Usage</h2>
-        <p>
-          Devices must be used properly. Soil Monitor is not liable for device
-          malfunctions or incorrect readings.
-        </p>
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden transition-colors duration-300">
+      <button class="w-full text-left px-6 py-4 flex justify-between items-center focus:outline-none toggle-card">
+        <span class="font-semibold text-soft-sky-text dark:text-dark-text">2. How We Use Your Information</span>
+        <i class="fas fa-chevron-down text-gray-600 dark:text-gray-300 transition-transform"></i>
+      </button>
+      <div class="px-6 py-4 text-blue-900 dark:text-gray-300 leading-relaxed hidden">
+        Data is used to provide soil monitoring services, send alerts, improve user experience, and develop new features. We also analyze usage trends to optimize performance.
+      </div>
+    </div>
 
-        <h2>5. Limitation of Liability</h2>
-        <p>
-          All data is provided for informational purposes only. Soil Monitor is
-          not responsible for agricultural decisions based on this data.
-        </p>
+    <!-- Add more cards similarly for other sections... -->
+  </section>
+</main>
 
-        <h2>6. Governing Law</h2>
-        <p>These terms are governed by the laws of [Your Country].</p>
-      </section>
+<!-- DARK/LIGHT TOGGLE SCRIPT -->
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
 
-      <!-- Privacy Policy -->
-      <section class="policy-section">
-        <h1>Privacy Policy</h1>
-        <p><strong>Effective Date:</strong> 2025-10-22</p>
+  if(localStorage.getItem('theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+    themeIcon.classList.replace('fa-sun', 'fa-moon');
+  } else {
+    document.documentElement.classList.remove('dark');
+    themeIcon.classList.replace('fa-moon', 'fa-sun');
+  }
 
-        <h2>1. Information We Collect</h2>
-        <p>
-          Personal info: name, email, phone, location. Device data: soil
-          readings, timestamps. Usage data: pages visited, alerts set.
-        </p>
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if(document.documentElement.classList.contains('dark')) {
+      localStorage.setItem('theme', 'dark');
+      themeIcon.classList.replace('fa-sun', 'fa-moon');
+    } else {
+      localStorage.setItem('theme', 'light');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+  });
 
-        <h2>2. How We Use Your Information</h2>
-        <p>
-          To provide soil monitoring services, alerts, and improve user
-          experience.
-        </p>
-
-        <h2>3. Data Sharing</h2>
-        <p>
-          We do not sell personal data. Data may be shared with service
-          providers or if legally required.
-        </p>
-
-        <h2>4. Security</h2>
-        <p>
-          We use reasonable measures to protect your data but cannot guarantee
-          absolute security.
-        </p>
-
-        <h2>5. User Rights</h2>
-        <p>
-          Users may access, correct, or delete their personal information.
-          Contact support@soilmonitor.com for requests.
-        </p>
-
-        <h2>6. Changes to Policy</h2>
-        <p>
-          Updates will be posted on this page. Continued use constitutes
-          acceptance.
-        </p>
-      </section>
-    </main>
-  </body>
+  // Collapsible Cards
+  document.querySelectorAll('.toggle-card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = btn.nextElementSibling;
+      content.classList.toggle('hidden');
+      const icon = btn.querySelector('i');
+      icon.classList.toggle('rotate-180');
+    });
+  });
+</script>
+</body>
 </html>

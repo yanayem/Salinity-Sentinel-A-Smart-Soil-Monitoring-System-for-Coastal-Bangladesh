@@ -19,7 +19,9 @@ DEBUG = True  # Set to False in production
 
 ALLOWED_HOSTS = []
 # Example for deployment:
-ALLOWED_HOSTS = ["soil-monitoring.onrender.com", "localhost", "127.0.0.1]
+#
+
+ALLOWED_HOSTS = ["soil-monitoring.onrender.com", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ["https://soil-monitoring.onrender.com",
     "http://localhost",
     "http://127.0.0.1"

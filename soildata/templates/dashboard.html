@@ -1,123 +1,196 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard | Soil Monitor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard | Soil Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white :text-gray-900 min-h-screen">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body
+    class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white :text-gray-900 min-h-screen"
+  >
+    {% include 'sidebar.html' %}
 
-  {% include 'sidebar.html' %}
+    <main class="md:ml-60 mt-16 p-8 space-y-8">
+      <!-- PROFILE CARD FULL WIDTH -->
+      <div
+        class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full flex items-center gap-6"
+      >
+        <img
+          id="profilePic"
+          {%
+          if
+          profile.profile_pic
+          %}
+          src="{{ profile.profile_pic.url }}"
+          {%
+          else
+          %}
+          src="https://www.w3schools.com/howto/img_avatar.png"
+          {%
+          endif
+          %}
+          alt="User Avatar"
+          class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"
+        />
 
-  <main class="md:ml-60 mt-16 p-8 space-y-8">
-
-    <!-- PROFILE CARD FULL WIDTH -->
-    <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full flex items-center gap-6">
-      <img id="profilePic"
-                   {% if profile.profile_pic %}
-                     src="{{ profile.profile_pic.url }}"
-                   {% else %}
-                     src="https://www.w3schools.com/howto/img_avatar.png"
-                   {% endif %}
-                   alt="User Avatar"
-                   class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"/>
-              
-      <div class="flex flex-col justify-center">
-        <h2 class="text-2xl font-semibold  text-gray-900 dark:text-white">{{ user.first_name }} {{ user.last_name }}</h2>
-        <p class=" text-gray-600 dark:text-gray-400 mt-1"><i class="fas fa-envelope"></i> {{ user.email }}</p>
+        <div class="flex flex-col justify-center">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
+            {{ user.first_name }} {{ user.last_name }}
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">
+            <i class="fas fa-envelope"></i> {{ user.email }}
+          </p>
+        </div>
       </div>
-    </div>
 
-    <!-- LATEST MOISTURE READINGS -->
-    <div class="bg-gray-100 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full max-w-[900px] mx-auto">
-      <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-tint"></i> Latest Moisture Readings</h3>
-      <ul class="mt-4 space-y-2 text-gray-600 dark:text-gray-400">
-        {% for reading in readings %}
+      <!-- LATEST MOISTURE READINGS -->
+      <div
+        class="bg-gray-100 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full max-w-[900px] mx-auto"
+      >
+        <h3
+          class="text-green-500 text-xl font-semibold flex items-center gap-2"
+        >
+          <i class="fas fa-tint"></i> Latest Moisture Readings
+        </h3>
+        <ul class="mt-4 space-y-2 text-gray-600 dark:text-gray-400">
+          {% for reading in readings %}
           <li class="flex justify-between items-center">
             <div>
               <i class="fas fa-leaf text-green-500"></i>
-              Field {{ reading.device.name|default:"-" }}: {{ reading.moisture }}%
+              Field {{ reading.device.name|default:"-" }}: {{ reading.moisture
+              }}%
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">
               {{ reading.updated_at|date:"M d, Y H:i" }}
             </div>
           </li>
-        {% empty %}
+          {% empty %}
           <li>No moisture readings available</li>
-        {% endfor %}
-      </ul>
-    </div>
+          {% endfor %}
+        </ul>
+      </div>
 
-    <!-- MOISTURE GRAPH -->
-    <div class="bg-gray-100 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full max-w-[900px] mx-auto">
-      <h3 class="text-green-500 text-xl font-semibold flex items-center gap-2"><i class="fas fa-chart-line"></i> Moisture Graph</h3>
-      <canvas id="moistureChart" class="mt-4"></canvas>
-    </div>
+      <!-- MOISTURE GRAPH -->
+      <div
+        class="bg-gray-100 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 w-full max-w-[900px] mx-auto"
+      >
+        <h3
+          class="text-green-500 text-xl font-semibold flex items-center gap-2"
+        >
+          <i class="fas fa-chart-line"></i> Moisture Graph
+        </h3>
+        <canvas id="moistureChart" class="mt-4"></canvas>
+      </div>
+    </main>
 
-  </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  const ctx = document.getElementById('moistureChart').getContext('2d');
+let chart;
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    const ctx = document.getElementById('moistureChart').getContext('2d');
-    let chart;
+function getThemeColors() {
+  const isDark = document.documentElement.classList.contains('dark');
+  return {
+    text: isDark ? 'white' : 'black',
+    grid: 'rgba(255,255,255,0.1)'
+  };
+}
 
-    async function fetchData() {
-      try {
-        const response = await fetch("{% url 'soildata:api_moisture' %}");
-        const data = await response.json();
+async function fetchData() {
+  try {
+    const response = await fetch("{% url 'soildata:api_moisture' %}");
+    const data = await response.json();
 
-        const labels = data.readings.map(r => r.time).reverse();
-        const values = data.readings.map(r => r.moisture).reverse();
+    const labels = data.readings.map(r => r.time).reverse();
+    const values = data.readings.map(r => r.moisture).reverse();
 
-        if(chart){
-          chart.data.labels = labels;
-          chart.data.datasets[0].data = values;
-          chart.update();
-        } else {
-          chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: 'Moisture (%)',
-                data: values,
-                borderColor: '#00ffb5',
-                backgroundColor: 'rgba(0,255,181,0.2)',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 5,
-                pointHoverRadius: 7
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: { legend: { labels: { color: 'white' } } },
-              scales: {
-                x: { ticks: { color: 'black dark:white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                y: { ticks: { color: 'black dark:white' }, grid: { color: 'rgba(255,255,255,0.1)' }, beginAtZero: true }
+    const colors = getThemeColors();
+
+    if (chart) {
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = values;
+
+      // update theme colors dynamically
+      chart.options.plugins.legend.labels.color = colors.text;
+      chart.options.scales.x.ticks.color = colors.text;
+      chart.options.scales.y.ticks.color = colors.text;
+
+      chart.update();
+    } else {
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Moisture (%)',
+            data: values,
+            borderColor: '#00ffb5',
+            backgroundColor: 'rgba(0,255,181,0.2)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 7
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: colors.text
               }
             }
-          });
+          },
+          scales: {
+            x: {
+              ticks: { color: colors.text },
+              grid: { color: colors.grid }
+            },
+            y: {
+              ticks: { color: colors.text },
+              grid: { color: colors.grid },
+              beginAtZero: true
+            }
+          }
         }
-
-      } catch(err){
-        console.error("Error fetching moisture data:", err);
-      }
+      });
     }
 
-    // Initial load
-    fetchData();
+  } catch (err) {
+    console.error("Error fetching moisture data:", err);
+  }
+}
 
-    // Auto-refresh every 5 seconds for motion effect
-    setInterval(fetchData, 5000);
-  </script>
-</body>
+// Initial load
+fetchData();
+
+// Auto-refresh every 5 seconds
+setInterval(fetchData, 5000);
+
+// Listen for theme change (Tailwind dark class toggle)
+const observer = new MutationObserver(() => {
+  if (chart) {
+    const colors = getThemeColors();
+    chart.options.plugins.legend.labels.color = colors.text;
+    chart.options.scales.x.ticks.color = colors.text;
+    chart.options.scales.y.ticks.color = colors.text;
+    chart.update();
+  }
+});
+observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+</script>
+  </body>
 </html>
