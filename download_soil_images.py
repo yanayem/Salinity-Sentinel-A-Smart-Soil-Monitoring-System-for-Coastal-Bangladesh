@@ -13,7 +13,7 @@ def download_images():
 
         print(f"\nDownloading images for: {soil}")
 
-        for i in range(15):  # download 15 images each
+        for i in range(15):  
             url = f"https://source.unsplash.com/random/400x400/?soil,{soil.lower()}"
             save_path = os.path.join(folder, f"{soil}_{i}.jpg")
 

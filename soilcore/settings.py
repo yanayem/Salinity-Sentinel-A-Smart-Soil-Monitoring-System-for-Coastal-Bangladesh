@@ -46,19 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Third-party apps
-    'jazzmin',
-
     # Project apps
     'account',
     'soilcore',
     'weather',
     'soildata',
     'chatApp',  
-    
-    #photo vision 
-    'soilvision'
+    'soilvision',
 ]
 
 # -------------------------
@@ -125,6 +119,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'account.context_processors.global_profile',
             ],
         },
     },
@@ -182,7 +177,7 @@ SEARCH_ENGINE_ID = "d4f67ec45810c4c76"
 # -------------------------
 # Chat / OpenAI / Gemini
 # -------------------------
-GEMINI_API_KEY = "AIzaSyAtdLvDmDGkLiQTf0WET-rpRxnOTFEPUQk"
+GEMINI_API_KEY = "AIzaSyDHZ2rPrVqUThpvrwf5eRaAFvB820BVBeg"
 CHAT_HISTORY_LIMIT = 50
 
 # -------------------------
@@ -193,7 +188,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'soilmonitor2025@gmail.com'
-EMAIL_HOST_PASSWORD = 'iekb dktq cfcl gnxc'  # WARNING: Do not hardcode in production
+EMAIL_HOST_PASSWORD = os.environ.get('iekb dktq cfcl gnxc')  # WARNING: Do not hardcode in production
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # -------------------------
 # Channels (for chat app)

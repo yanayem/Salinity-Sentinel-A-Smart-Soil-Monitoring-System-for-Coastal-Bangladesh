@@ -65,5 +65,5 @@ history = model.fit(
 model.save(MODEL_PATH)
 print("Model saved at", MODEL_PATH)
 
-# Save class indices
+
 np.save(os.path.join(os.path.dirname(MODEL_PATH), "label_encoder_classes.npy"), train_data.class_indices)

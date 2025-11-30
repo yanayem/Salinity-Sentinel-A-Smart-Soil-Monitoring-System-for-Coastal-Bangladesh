@@ -117,6 +117,20 @@ def profilepage(request):
     })
 
 
+@login_required
+def ajax_upload_profile_pic(request):
+    if request.method == "POST" and request.FILES.get("profile_pic"):
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile.profile_pic = request.FILES["profile_pic"]
+        profile.save()
+        return JsonResponse({
+            "status": "success",
+            "message": "Profile picture updated!",
+            "profile_pic_url": profile.profile_pic.url
+        })
+    return JsonResponse({"status": "error", "message": "No file uploaded"})
+
+
 # -------------------------
 # AJAX: remove profile pic
 # -------------------------
@@ -286,3 +300,38 @@ def delete_account(request):
         messages.success(request, "🗑️ Your account and all associated data have been permanently deleted.")
         return redirect("account:login")
     return redirect("account:settingpage")
+
+
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
+from django.urls import reverse_lazy
+
+# --------------------------
+# Custom Password Reset Views
+# --------------------------
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'password_file/password_reset.html'
+    email_template_name = 'password_file/password_reset_email.html'  # <- add this line
+    success_url = reverse_lazy('account:password_reset_done')
+    extra_context = {'stage': 'email'} 
+
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_file/password_reset.html'
+    extra_context = {'stage': 'done'}
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'password_file/password_reset.html'
+    success_url = reverse_lazy('account:login')  # redirect to login after password reset
+    extra_context = {'stage': 'confirm'}
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'password_file/password_reset.html'
+    extra_context = {'stage': 'complete'}

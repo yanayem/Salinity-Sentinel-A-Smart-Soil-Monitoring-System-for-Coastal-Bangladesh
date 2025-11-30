@@ -36,7 +36,7 @@ def soil_upload(request):
             # Save prediction to DB
             soil_pred = SoilPrediction.objects.create(
                 user=request.user,
-                image=uploaded_file,  # saves file to media/soil_images/
+                image=uploaded_file,  
                 predicted_soil_type=predicted_class,
                 confidence=confidence
             )
@@ -46,7 +46,7 @@ def soil_upload(request):
 
         except Exception as e:
             messages.error(request, f"Error processing image: {e}")
-            return redirect('soilvision:soil_upload')  # History button and redirect
+            return redirect('soilvision:soil_upload')  
 
     return render(request, 'soil_upload.html')
 

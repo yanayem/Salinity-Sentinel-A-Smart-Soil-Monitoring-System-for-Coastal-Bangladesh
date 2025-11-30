@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <title>Dashboard | Soil Monitor</title>
@@ -19,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body
-    class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white :text-gray-900 min-h-screen"
+    class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white text-gray-900 min-h-screen"
   >
     {% include 'sidebar.html' %}
 
@@ -30,18 +30,11 @@
       >
         <img
           id="profilePic"
-          {%
-          if
-          profile.profile_pic
-          %}
+          {% if profile.profile_pic %}
           src="{{ profile.profile_pic.url }}"
-          {%
-          else
-          %}
+          {% else %}
           src="https://www.w3schools.com/howto/img_avatar.png"
-          {%
-          endif
-          %}
+          {% endif %}
           alt="User Avatar"
           class="w-32 h-32 rounded-full border-4 border-green-500 object-cover hover:scale-105 transition"
         />
@@ -70,8 +63,7 @@
           <li class="flex justify-between items-center">
             <div>
               <i class="fas fa-leaf text-green-500"></i>
-              Field {{ reading.device.name|default:"-" }}: {{ reading.moisture
-              }}%
+              Field {{ reading.device.name|default:"-" }}: {{ reading.moisture }}%
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">
               {{ reading.updated_at|date:"M d, Y H:i" }}
@@ -125,8 +117,8 @@ async function fetchData() {
 
       // update theme colors dynamically
       chart.options.plugins.legend.labels.color = colors.text;
-      chart.options.scales.x.ticks.color = colors.text;
-      chart.options.scales.y.ticks.color = colors.text;
+      chart.options.scales.x.ticks.color = colors.grid;
+      chart.options.scales.y.ticks.color = colors.grid;
 
       chart.update();
     } else {

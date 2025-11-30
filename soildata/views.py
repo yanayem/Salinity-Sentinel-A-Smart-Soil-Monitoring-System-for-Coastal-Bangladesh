@@ -14,9 +14,6 @@ from soilcore.models import SoilType
 # -------------------------
 # Dashboard view
 # -------------------------
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 import json
 
 @login_required
@@ -25,7 +22,10 @@ def dashboard(request):
     profile, _ = UserProfile.objects.get_or_create(user=user)
 
     # Latest 7 moisture readings
-    readings = DeviceReading.objects.filter(device__user=user).order_by('-updated_at')[:7]
+    readings = list(
+        DeviceReading.objects.filter(device__user=user)
+        .order_by('-updated_at')[:7]
+    )
 
     # For Chart.js (reverse to show oldest -> newest)
     readings_chart = readings[::-1]
@@ -123,7 +123,6 @@ def crop_advisor(request):
     location_input = ""
 
     if request.method == "POST":
-        # Get values from the form
         ph_raw = request.POST.get("ph")
         soil_type_input = request.POST.get("soil_type", "").strip()
         location_input = request.POST.get("location", "").strip()
@@ -147,11 +146,9 @@ def crop_advisor(request):
                     crops_list = [c.strip() for c in soil.suitable_crops.split(",")]
                     recommendations.extend(crops_list)
 
-                # Tips: you can customize what tips to show
                 if soil.description:
                     tips.append(soil.description)
 
-            # Remove duplicates
             recommendations = list(set(recommendations))
             tips = list(set(tips))
 
@@ -163,3 +160,4 @@ def crop_advisor(request):
         "location_input": location_input,
     }
     return render(request, "crop_advisor.html", context)
+
