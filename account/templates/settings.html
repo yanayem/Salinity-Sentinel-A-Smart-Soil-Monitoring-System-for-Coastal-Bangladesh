@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings | Soil Monitor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-100 flex min-h-screen">
+
+  {% include 'sidebar.html' %}
+
+  <main class="flex-1 p-10 mt-16 md:ml-64">
+    <div class="max-w-3xl mx-auto bg-white/60 dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+  <h1 class="text-3xl font-bold text-[#00adb5] mb-6">⚙️ Account Settings</h1>
+
+  <!-- Messages inside the same card -->
+  {% if messages %}
+  <div class="space-y-2 mb-6">
+    {% for message in messages %}
+    <div class="p-3 rounded-md 
+      {% if message.tags == 'success' %}bg-green-600{% elif message.tags == 'error' %}bg-red-600{% else %}bg-gray-700{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+      <form id="settingsForm" class="space-y-5">
+  {% csrf_token %}
+
+  <!-- Full Name -->
+  <div>
+    <label class="block text-sm text-gray-800 dark:text-gray-300 mb-1">Full Name</label>
+    <span class="read-mode block bg-gray-300 dark:bg-gray-700 px-4 py-2 rounded-lg text-gray-900 drak:text-gray-200">{{ user.first_name }} {{ user.last_name }}</span>
+    <input type="text" name="full_name" class="edit-mode hidden w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#E5E4E2] dark:focus:ring-[#00adb5]" />
+  </div>
+
+  <!-- Email -->
+  <div>
+    <label class="block text-sm text-gray-800 dark:text-gray-300 mb-1">Email</label>
+    <span class="read-mode block bg-gray-300 dark:bg-gray-700 px-4 py-2 rounded-lg text-gray-900 drak:text-gray-200">{{ user.email }}</span>
+    <input type="email" name="email" class="edit-mode hidden w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#E5E4E2] dark:focus:ring-[#00adb5]" {% if not can_change_email %}disabled{% endif %}/>
+    {% if not can_change_email %}
+      <p class="text-xs text-gray-400 mt-1">⚠️ You can update email again after 30 days.</p>
+    {% endif %}
+  </div>
+
+  <!-- Phone Number -->
+  <div>
+    <label class="block text-sm text-gray-800 dark:text-gray-300 mb-1">Phone Number</label>
+    <span class="read-mode block bg-gray-300 dark:bg-gray-700 px-4 py-2 rounded-lg text-gray-900 drak:text-gray-200">{{ profile.phone_number|default:"-" }}</span>
+    <input type="text" name="phone_number" class="edit-mode hidden w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#E5E4E2] dark:focus:ring-[#00adb5]" />
+  </div>
+
+  <!-- Location -->
+  <div>
+    <label class="block text-sm text-gray-800 dark:text-gray-300 mb-1">Location</label>
+    <span class="read-mode block bg-gray-300 dark:bg-gray-700 px-4 py-2 rounded-lg text-gray-900 drak:text-gray-200">{{ profile.location|default:"-" }}</span>
+    <input type="text" name="location" class="edit-mode hidden w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#E5E4E2] dark:focus:ring-[#00adb5]" />
+  </div>
+
+  <div class="flex justify-end gap-2">
+    <button type="button" id="editBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg shadow-md">Edit</button>
+    <button type="submit" id="saveBtn" class="bg-[#00adb5] hover:bg-[#019ca3] text-white px-6 py-2 rounded-lg shadow-md hidden">Save</button>
+  </div>
+</form>
+
+
+
+      <!-- DOWNLOAD MY DATA -->
+      <div class="mt-10 border-t border-gray-700 pt-6">
+        <h2 class="text-xl font-semibold text-[#00adb5] mb-3">📦 Download My Data</h2>
+        <p class="text-gray-400 mb-3 text-sm">Download a copy of all your soil readings and profile info.</p>
+        <a href="{% url 'account:download_user_data' %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md inline-block">Download Data (ZIP)</a>
+      </div>
+
+      <!-- DELETE ACCOUNT -->
+      <div class="mt-10 border-t border-gray-700 pt-6">
+        <h2 class="text-xl font-semibold text-red-500 mb-3">🗑️ Delete Account</h2>
+        <p class="text-gray-400 mb-3 text-sm">This will permanently delete your account and all your data. This action cannot be undone.</p>
+        <button onclick="confirmDelete()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md">Delete My Account</button>
+      </div>
+
+      <!-- Modal -->
+      <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center">
+        <div class="bg-gray-800 p-6 rounded-lg w-96 shadow-lg text-center">
+          <h3 class="text-xl font-semibold text-red-500 mb-2">Confirm Account Deletion</h3>
+          <p class="text-gray-300 mb-4">Are you sure you want to delete your account permanently?</p>
+          <form method="POST" action="{% url 'account:delete_account' %}">
+            {% csrf_token %}
+            <div class="flex justify-center gap-4">
+              <button type="button" onclick="closeModal()" class="bg-gray-600 px-4 py-2 rounded-md hover:bg-gray-700">Cancel</button>
+              <button type="submit" class="bg-red-600 px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  const editBtn = $("#editBtn");
+  const saveBtn = $("#saveBtn");
+  const readElements = $(".read-mode");
+  const editInputs = $(".edit-mode");
+  const form = $("#settingsForm");
+  const cardContainer = $(".max-w-3xl");
+
+  // Fill edit inputs with current values
+  function fillEditInputs() {
+    readElements.each(function(idx) {
+      const text = $(this).text().trim();
+      editInputs.eq(idx).val(text === "-" ? "" : text);
+    });
+  }
+
+  // Toggle to edit mode
+  editBtn.click(function() {
+    fillEditInputs();
+    readElements.addClass("hidden");
+    editInputs.removeClass("hidden");
+    saveBtn.removeClass("hidden");
+    editBtn.addClass("hidden");
+  });
+
+  // Handle form submission
+  form.on("submit", function(e) {
+    e.preventDefault();
+    const formData = $(this).serialize();
+
+    $.post("{% url 'account:settingpage' %}", formData)
+      .done(function() {
+        // Update read-mode spans
+        readElements.each(function(idx) {
+          const inputVal = editInputs.eq(idx).val().trim();
+          $(this).text(inputVal === "" ? "-" : inputVal);
+        });
+
+        // Switch back to read mode
+        editInputs.addClass("hidden");
+        readElements.removeClass("hidden");
+        saveBtn.addClass("hidden");
+        editBtn.removeClass("hidden");
+
+        // Show temporary success message inside the card
+        const msgDiv = $('<div class="p-3 rounded-md bg-green-600 mb-4">✅ Profile updated successfully!</div>');
+        cardContainer.prepend(msgDiv);
+        setTimeout(() => msgDiv.remove(), 3000);
+      })
+      .fail(function() {
+        // Show temporary error message
+        const errDiv = $('<div class="p-3 rounded-md bg-red-600 mb-4">❌ Error updating profile. Try again.</div>');
+        cardContainer.prepend(errDiv);
+        setTimeout(() => errDiv.remove(), 3000);
+      });
+  });
+});
+</script>
+
+
+</body>
+</html>
