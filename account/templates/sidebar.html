@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,33 +120,75 @@
 
 <!-- Scripts -->
 <script>
-  // Theme toggle
+  // ------------------------
+  // Dark / Light Mode Toggle
+  // ------------------------
   const html = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   const themeIcon = document.getElementById('themeIcon');
 
-  function updateThemeIcon() {
-    if(html.classList.contains('dark')) {
-      themeIcon.classList.replace('fa-sun','fa-moon');
-    } else {
-      themeIcon.classList.replace('fa-moon','fa-sun');
-    }
-  }
+  // Initialize theme from localStorage
+  if(localStorage.theme === 'dark') html.classList.add('dark');
   updateThemeIcon();
 
-  themeToggle.addEventListener('click', () => {
-    html.classList.toggle('dark');
-    updateThemeIcon();
-  });
+  function updateThemeIcon(){
+    if(themeIcon){ // only if icon exists
+      if(html.classList.contains('dark')){
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+      } else {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+      }
+    }
+  }
 
-  // Mobile sidebar toggle
+  function toggleTheme(){
+    html.classList.toggle('dark');
+    localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+    updateThemeIcon();
+  }
+
+  if(themeToggle){
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+
+  // ------------------------
+  // Mobile Sidebar Toggle
+  // ------------------------
   const mobileBtn = document.getElementById('mobileMenuBtn');
   const sidebar = document.getElementById('sidebarMenu');
 
-  mobileBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('-translate-x-full');
+  if(mobileBtn && sidebar){
+    mobileBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  }
+
+  // ------------------------
+  // Optional: Close sidebar on outside click (mobile)
+  // ------------------------
+  document.addEventListener('click', (e) => {
+    if(window.innerWidth < 768){ // only mobile
+      if(sidebar && !sidebar.contains(e.target) && !mobileBtn.contains(e.target)){
+        if(!sidebar.classList.contains('-translate-x-full')){
+          sidebar.classList.add('-translate-x-full');
+        }
+      }
+    }
+  });
+
+  // ------------------------
+  // Optional: Close sidebar on link click (mobile)
+  // ------------------------
+  const sidebarLinks = sidebar ? sidebar.querySelectorAll('a') : [];
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if(window.innerWidth < 768 && sidebar){
+        sidebar.classList.add('-translate-x-full');
+      }
+    });
   });
 </script>
+
 
 </body>
 </html>

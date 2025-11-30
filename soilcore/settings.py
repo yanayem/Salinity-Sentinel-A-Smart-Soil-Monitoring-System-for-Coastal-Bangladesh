@@ -158,19 +158,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # -------------------------
 # Login URLs (used by @login_required)
 # -------------------------
-LOGIN_URL = '/accounts/login/'  # Default login page
-LOGIN_REDIRECT_URL = '/soildata/dashboard/'  # Redirect after login
+LOGIN_URL = '/accounts/login/'  
+LOGIN_REDIRECT_URL = '/soildata/dashboard/'  
 
+
+#=======================================        API SECTION       ==================================
 # -------------------------
 # Weather API Settings
 # -------------------------
+
 OPENWEATHER_API_KEY = "963804a07802e5371e2a2bd19f6a7afb"
-WEATHER_CACHE_SECONDS = 900  # 15 min cache
+WEATHER_CACHE_SECONDS = 900  
+
+#-----------------------
+# Unsplash API
+#------------------------
+
+UNSPLASH_ACCESS_KEY = '1p8c8r_JXHlH5-CStbJgX5JNheF7_7YanrgSftDbZX8'
 
 # -------------------------
 # Google Custom Search API Settings
 # -------------------------
-
 
 SEARCH_ENGINE_ID = "d4f67ec45810c4c76"
 
@@ -180,6 +188,8 @@ SEARCH_ENGINE_ID = "d4f67ec45810c4c76"
 GEMINI_API_KEY = "AIzaSyDHZ2rPrVqUThpvrwf5eRaAFvB820BVBeg"
 CHAT_HISTORY_LIMIT = 50
 
+
+#=========================----------------------========================-------------------==================
 # -------------------------
 # Email (example)
 # -------------------------
@@ -188,7 +198,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'soilmonitor2025@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('iekb dktq cfcl gnxc')  # WARNING: Do not hardcode in production
+EMAIL_HOST_PASSWORD = os.environ.get('iekb dktq cfcl gnxc')  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # -------------------------
@@ -222,5 +232,3 @@ DATABASES = {
 """
 
 
-# Unsplash API
-UNSPLASH_ACCESS_KEY = '1p8c8r_JXHlH5-CStbJgX5JNheF7_7YanrgSftDbZX8'

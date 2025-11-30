@@ -26,6 +26,7 @@ urlpatterns = [
 
     # Account / Authentication
     path('account/', include('account.urls', namespace='account')),
+    
     # Soil Data
     path('soildata/', include('soildata.urls', namespace='soildata')),
     

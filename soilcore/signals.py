@@ -19,10 +19,10 @@ def send_alert_email(sender, instance, created, **kwargs):
         send_mail(
             subject,
             message,
-            'no-reply@soilmonitor.com',  # sender email
+            'no-reply@soilmonitor.com', 
             [user_email],
             fail_silently=True,
         )
-        # Mark as emailed
+    
         instance.emailed = True
         instance.save()
