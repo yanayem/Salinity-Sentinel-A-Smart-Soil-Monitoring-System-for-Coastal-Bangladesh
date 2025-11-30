@@ -185,8 +185,8 @@ SEARCH_ENGINE_ID = "d4f67ec45810c4c76"
 # -------------------------
 # Chat / OpenAI / Gemini
 # -------------------------
-GEMINI_API_KEY = "AIzaSyDHZ2rPrVqUThpvrwf5eRaAFvB820BVBeg"
-CHAT_HISTORY_LIMIT = 50
+GEMINI_API_KEY = "AIzaSyBc_A-qYlgjhP-pZIyvn5ud_ZORbFIeG7c"
+CHAT_HISTORY_LIMIT = 550
 
 
 #=========================----------------------========================-------------------==================
